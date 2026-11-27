@@ -1,12 +1,26 @@
 import type {
+  AttendancePolicyOptionsResponse,
+  AttendancePolicyRecord,
+  BatchAssignScheduleDto,
+  CreateAttendancePolicyDto,
+  CreateCutOffDto,
   CreateEmployeeDto,
   CreateReferenceItemDto,
+  CreateScheduleDto,
   CreateUserDto,
+  CutOffPresetItem,
+  CutOffRecord,
+  CutOffScheduleType,
   Employee,
+  EmployeeScheduleRecord,
   EmployeeSupervisorSummary,
+  ListAttendancePoliciesQuery,
+  ListCutOffsQuery,
+  ListEmployeeSchedulesQuery,
   ListEmployeesQuery,
   ListOrgQuery,
   ListReferenceItemsQuery,
+  ListSchedulesQuery,
   ListUsersQuery,
   LoginDto,
   OrgActiveOptions,
@@ -20,8 +34,14 @@ import type {
   ReferenceGroupKey,
   ReferenceItemRecord,
   RegisterDto,
+  ResolvedScheduleResponse,
+  ScheduleRecord,
+  UpdateAttendancePolicyDto,
+  UpdateCutOffDto,
   UpdateEmployeeDto,
+  UpdateEmployeeScheduleDto,
   UpdateReferenceItemDto,
+  UpdateScheduleDto,
   User,
 } from "@starter/shared";
 import { webEnv } from "@/env";
@@ -185,6 +205,88 @@ export const api = {
     }),
   deleteReferenceItem: (group: ReferenceGroupKey, id: number) =>
     request<void>(`/reference-setup/groups/${group}/items/${id}`, {
+      method: "DELETE",
+    }),
+
+  // Attendance Policies
+  listAttendancePolicies: (query: Partial<ListAttendancePoliciesQuery> = {}) =>
+    request<PaginatedResponse<AttendancePolicyRecord>>(
+      `/attendance-policies${toQueryString(query)}`,
+    ),
+  getAttendancePolicyOptions: () =>
+    request<AttendancePolicyOptionsResponse>("/attendance-policies/options"),
+  createAttendancePolicy: (data: CreateAttendancePolicyDto) =>
+    request<AttendancePolicyRecord>("/attendance-policies", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateAttendancePolicy: (id: number, data: UpdateAttendancePolicyDto) =>
+    request<AttendancePolicyRecord>(`/attendance-policies/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteAttendancePolicy: (id: number) =>
+    request<void>(`/attendance-policies/${id}`, {
+      method: "DELETE",
+    }),
+
+  // Schedule Management
+  listSchedules: (query: Partial<ListSchedulesQuery> = {}) =>
+    request<PaginatedResponse<ScheduleRecord>>(`/schedules${toQueryString(query)}`),
+  createSchedule: (data: CreateScheduleDto) =>
+    request<ScheduleRecord>("/schedules", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateSchedule: (id: number, data: UpdateScheduleDto) =>
+    request<ScheduleRecord>(`/schedules/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteSchedule: (id: number) =>
+    request<void>(`/schedules/${id}`, {
+      method: "DELETE",
+    }),
+  listEmployeeSchedules: (query: Partial<ListEmployeeSchedulesQuery> = {}) =>
+    request<PaginatedResponse<EmployeeScheduleRecord>>(
+      `/schedules/assignments${toQueryString(query)}`,
+    ),
+  batchAssignSchedule: (data: BatchAssignScheduleDto) =>
+    request<EmployeeScheduleRecord[]>("/schedules/assignments/batch", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateEmployeeSchedule: (id: number, data: UpdateEmployeeScheduleDto) =>
+    request<EmployeeScheduleRecord>(`/schedules/assignments/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteEmployeeSchedule: (id: number) =>
+    request<void>(`/schedules/assignments/${id}`, {
+      method: "DELETE",
+    }),
+  resolveEmployeeSchedule: (employeeId: string, from: string, to: string) =>
+    request<ResolvedScheduleResponse>(
+      `/schedules/employees/${encodeURIComponent(employeeId)}/resolve${toQueryString({ from, to })}`,
+    ),
+
+  // Cut-Off Management
+  listCutOffs: (query: Partial<ListCutOffsQuery> = {}) =>
+    request<PaginatedResponse<CutOffRecord>>(`/cut-offs${toQueryString(query)}`),
+  getCutOffPresets: (scheduleType?: CutOffScheduleType) =>
+    request<CutOffPresetItem[]>(`/cut-offs/presets${toQueryString({ scheduleType })}`),
+  createCutOff: (data: CreateCutOffDto) =>
+    request<CutOffRecord>("/cut-offs", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateCutOff: (id: number, data: UpdateCutOffDto) =>
+    request<CutOffRecord>(`/cut-offs/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteCutOff: (id: number) =>
+    request<void>(`/cut-offs/${id}`, {
       method: "DELETE",
     }),
 };

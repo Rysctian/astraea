@@ -12,7 +12,7 @@ vi.mock("@tanstack/react-router", () => ({
 }));
 
 describe("AppShell (Sidebar + Header)", () => {
-  it("renders sidebar navigation, header controls, and triggers sign out", () => {
+  it("renders sidebar navigation, header controls, and triggers sign out", async () => {
     const onSignOut = vi.fn();
 
     render(
@@ -37,8 +37,9 @@ describe("AppShell (Sidebar + Header)", () => {
     expect(screen.getByText("Workspace Content")).toBeInTheDocument();
     expect(screen.getByText(/search or jump to/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /open user menu/i }));
-    fireEvent.click(screen.getByRole("button", { name: /sign out/i }));
+    const menuTrigger = screen.getByRole("button", { name: /open user menu/i });
+    fireEvent.pointerDown(menuTrigger, { button: 0, ctrlKey: false });
+    fireEvent.click(await screen.findByRole("menuitem", { name: /sign out/i }));
     expect(onSignOut).toHaveBeenCalledTimes(1);
   });
 });

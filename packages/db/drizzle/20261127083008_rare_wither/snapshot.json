@@ -1,0 +1,804 @@
+{
+  "type": "diff",
+  "version": "10",
+  "dialect": "postgres",
+  "id": "32af5c12-63e6-4f39-9a45-84d6fe127cee",
+  "prevIds": [
+    "6fab23c0-bd85-44c8-bd69-d61d0a49e9dd"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "cut_off_periods"
+      ],
+      "writes": [
+        "s|tbl|public.cut_off_periods",
+        "n|tbl|public.cut_off_periods",
+        "e|tbl|public.cut_off_periods",
+        "n|rel|public.cut_off_periods",
+        "n|type|public.cut_off_periods",
+        "n|rel|public.cut_off_periods_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "cut_offs"
+      ],
+      "writes": [
+        "s|tbl|public.cut_offs",
+        "n|tbl|public.cut_offs",
+        "e|tbl|public.cut_offs",
+        "n|rel|public.cut_offs",
+        "n|type|public.cut_offs",
+        "n|rel|public.cut_offs_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "cut_off_periods",
+        "cut_off_periods_parent_no_uq"
+      ],
+      "writes": [
+        "s|idx|public.cut_off_periods_parent_no_uq",
+        "n|idx|public.cut_off_periods_parent_no_uq",
+        "e|idx|public.cut_off_periods_parent_no_uq",
+        "n|rel|public.cut_off_periods_parent_no_uq"
+      ],
+      "reads": [
+        "n|tbl|public.cut_off_periods",
+        "n|sch|public",
+        "n|col|public.cut_off_periods.cut_off_id",
+        "n|col|public.cut_off_periods.cut_off_no"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "cut_off_periods",
+        "cut_off_periods_dtr_range_idx"
+      ],
+      "writes": [
+        "s|idx|public.cut_off_periods_dtr_range_idx",
+        "n|idx|public.cut_off_periods_dtr_range_idx",
+        "e|idx|public.cut_off_periods_dtr_range_idx",
+        "n|rel|public.cut_off_periods_dtr_range_idx"
+      ],
+      "reads": [
+        "n|tbl|public.cut_off_periods",
+        "n|sch|public",
+        "n|col|public.cut_off_periods.dtr_date_from",
+        "n|col|public.cut_off_periods.dtr_date_to"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "cut_off_periods",
+        "cut_off_periods_payroll_range_idx"
+      ],
+      "writes": [
+        "s|idx|public.cut_off_periods_payroll_range_idx",
+        "n|idx|public.cut_off_periods_payroll_range_idx",
+        "e|idx|public.cut_off_periods_payroll_range_idx",
+        "n|rel|public.cut_off_periods_payroll_range_idx"
+      ],
+      "reads": [
+        "n|tbl|public.cut_off_periods",
+        "n|sch|public",
+        "n|col|public.cut_off_periods.payroll_date_from",
+        "n|col|public.cut_off_periods.payroll_date_to"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "cut_off_periods",
+        "cut_off_periods_release_date_idx"
+      ],
+      "writes": [
+        "s|idx|public.cut_off_periods_release_date_idx",
+        "n|idx|public.cut_off_periods_release_date_idx",
+        "e|idx|public.cut_off_periods_release_date_idx",
+        "n|rel|public.cut_off_periods_release_date_idx"
+      ],
+      "reads": [
+        "n|tbl|public.cut_off_periods",
+        "n|sch|public",
+        "n|col|public.cut_off_periods.release_date"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "cut_offs",
+        "cut_offs_year_month_type_idx"
+      ],
+      "writes": [
+        "s|idx|public.cut_offs_year_month_type_idx",
+        "n|idx|public.cut_offs_year_month_type_idx",
+        "e|idx|public.cut_offs_year_month_type_idx",
+        "n|rel|public.cut_offs_year_month_type_idx"
+      ],
+      "reads": [
+        "n|tbl|public.cut_offs",
+        "n|sch|public",
+        "n|col|public.cut_offs.year",
+        "n|col|public.cut_offs.month",
+        "n|col|public.cut_offs.schedule_type"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "cut_offs",
+        "cut_offs_is_active_idx"
+      ],
+      "writes": [
+        "s|idx|public.cut_offs_is_active_idx",
+        "n|idx|public.cut_offs_is_active_idx",
+        "e|idx|public.cut_offs_is_active_idx",
+        "n|rel|public.cut_offs_is_active_idx"
+      ],
+      "reads": [
+        "n|tbl|public.cut_offs",
+        "n|sch|public",
+        "n|col|public.cut_offs.is_active"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "cut_off_periods"
+      ],
+      "writes": [
+        "s|fk|public.cut_off_periods.cut_off_periods_cut_off_id_cut_offs_id_fkey",
+        "n|fk|public.cut_off_periods.cut_off_periods_cut_off_id_cut_offs_id_fkey",
+        "e|fk|public.cut_off_periods.cut_off_periods_cut_off_id_cut_offs_id_fkey",
+        "n|con|public.cut_off_periods.cut_off_periods_cut_off_id_cut_offs_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.cut_off_periods",
+        "n|sch|public",
+        "n|tbl|public.cut_offs",
+        "n|sch|public",
+        "n|col|public.cut_off_periods.cut_off_id",
+        "n|col|public.cut_offs.id",
+        "e|uniqueness|public.cut_offs.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "cut_off_periods",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "cut_offs",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "cut_off_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "cut_off_no",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "dtr_date_from",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "dtr_date_to",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "no_dtr",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "false",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "confirmation_start_date",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "confirmation_end_date",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "confirmation_time_from",
+        "type": "time",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "confirmation_time_to",
+        "type": "time",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "payroll_date_from",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "payroll_date_to",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "release_date",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "schedule_type",
+        "type": "varchar(20)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "name",
+        "type": "varchar(100)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "year",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "month",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "cut_off_periods_parent_no_uq",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "cut_off_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "cut_off_no",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "cut_off_periods_dtr_range_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "dtr_date_from",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "dtr_date_to",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "cut_off_periods_payroll_range_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "payroll_date_from",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "payroll_date_to",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "cut_off_periods_release_date_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "release_date",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "cut_offs_year_month_type_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "year",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "month",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "schedule_type",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "cut_offs_is_active_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "cut_off_periods_cut_off_id_cut_offs_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "cut_off_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "cut_offs",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_off_periods",
+        "name": "cut_off_periods_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "cut_offs",
+        "name": "cut_offs_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    }
+  ]
+}

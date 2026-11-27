@@ -61,26 +61,37 @@ export function Sidebar({ className, children, ...props }: HTMLAttributes<HTMLEl
 
   return (
     <>
-      {mobileOpen ? (
-        <button
-          type="button"
-          aria-label="Close navigation menu"
-          onClick={() => setMobileOpen(false)}
-          className="fixed inset-0 z-40 bg-black/35 backdrop-blur-[1px] md:hidden"
-        />
-      ) : null}
+      <button
+        type="button"
+        aria-label="Close navigation menu"
+        tabIndex={mobileOpen ? 0 : -1}
+        onClick={() => setMobileOpen(false)}
+        className={cn(
+          "fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-200 ease-out md:hidden",
+          mobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+        )}
+      />
 
       <aside
         data-state={open ? "expanded" : "collapsed"}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-[236px] shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform duration-200 md:static md:z-auto md:transition-[width,margin] md:duration-200",
-          mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
-          open ? "md:w-[236px]" : "md:w-0 md:overflow-hidden md:border-r-0",
+          "fixed inset-y-0 left-0 z-50 flex w-[248px] shrink-0 flex-col overflow-hidden border-r border-sidebar-border/80 bg-sidebar/95 text-sidebar-foreground backdrop-blur-md transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:static md:z-auto md:transition-[width,border-color] md:duration-300 md:ease-[cubic-bezier(0.22,1,0.36,1)]",
+          mobileOpen
+            ? "translate-x-0 shadow-2xl md:shadow-none"
+            : "-translate-x-full md:translate-x-0",
+          open ? "md:w-[248px]" : "md:w-0 md:border-r-transparent",
           className,
         )}
         {...props}
       >
-        {children}
+        <div
+          className={cn(
+            "flex h-full w-[248px] flex-col transition-opacity duration-200 ease-out",
+            open ? "opacity-100" : "md:opacity-0",
+          )}
+        >
+          {children}
+        </div>
       </aside>
     </>
   );
@@ -89,7 +100,7 @@ export function Sidebar({ className, children, ...props }: HTMLAttributes<HTMLEl
 export function SidebarHeader({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex h-12 shrink-0 items-center justify-between gap-2 px-3", className)}
+      className={cn("flex h-13 shrink-0 items-center justify-between gap-2 px-3", className)}
       {...props}
     />
   );
@@ -98,7 +109,7 @@ export function SidebarHeader({ className, ...props }: HTMLAttributes<HTMLDivEle
 export function SidebarContent({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex flex-1 flex-col gap-4 overflow-y-auto px-2.5 py-2", className)}
+      className={cn("flex flex-1 flex-col gap-5 overflow-y-auto px-2.5 py-2.5", className)}
       {...props}
     />
   );
@@ -107,21 +118,21 @@ export function SidebarContent({ className, ...props }: HTMLAttributes<HTMLDivEl
 export function SidebarFooter({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("mt-auto shrink-0 border-t border-sidebar-border px-2.5 py-2", className)}
+      className={cn("mt-auto shrink-0 border-t border-sidebar-border/80 p-2.5", className)}
       {...props}
     />
   );
 }
 
 export function SidebarGroup({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex flex-col gap-0.5", className)} {...props} />;
+  return <div className={cn("flex flex-col gap-1", className)} {...props} />;
 }
 
 export function SidebarGroupLabel({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "px-2 pb-1 pt-0.5 text-[10px] font-semibold tracking-wider text-muted-foreground/80 uppercase",
+        "px-2.5 pb-1 pt-0.5 text-[10px] font-semibold tracking-wider text-muted-foreground/75 uppercase",
         className,
       )}
       {...props}
@@ -137,6 +148,17 @@ export function SidebarMenuItem({ className, ...props }: HTMLAttributes<HTMLLIEl
   return <li className={cn("list-none", className)} {...props} />;
 }
 
+export function sidebarMenuButtonClasses(isActive = false, disabled = false): string {
+  return cn(
+    "group relative flex h-8.5 w-full items-center gap-2.5 rounded-lg px-2.5 text-left text-[13px] transition-all duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+    disabled
+      ? "cursor-default text-muted-foreground/55"
+      : isActive
+        ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-[0_1px_2px_rgba(0,0,0,0.04)] ring-1 ring-sidebar-border/80"
+        : "cursor-pointer text-sidebar-foreground/85 hover:bg-black/[0.04] hover:text-foreground active:scale-[0.99] dark:hover:bg-white/[0.06]",
+  );
+}
+
 export function SidebarMenuButton({
   isActive = false,
   className,
@@ -146,13 +168,7 @@ export function SidebarMenuButton({
     <button
       type="button"
       data-active={isActive}
-      className={cn(
-        "flex h-8 w-full cursor-pointer items-center gap-2.5 rounded-md px-2 text-left text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
-        isActive
-          ? "border border-sidebar-border/80 bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-2xs"
-          : "text-sidebar-foreground hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.05]",
-        className,
-      )}
+      className={cn(sidebarMenuButtonClasses(isActive, props.disabled), className)}
       {...props}
     />
   );
@@ -166,7 +182,7 @@ export function SidebarTrigger({ className, ...props }: ButtonHTMLAttributes<HTM
       aria-label="Toggle sidebar"
       onClick={toggleSidebar}
       className={cn(
-        "inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "inline-flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-muted-foreground transition-all duration-150 hover:bg-accent hover:text-foreground active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
         className,
       )}
       {...props}

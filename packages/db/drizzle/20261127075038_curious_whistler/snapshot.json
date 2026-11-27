@@ -1,0 +1,1326 @@
+{
+  "type": "diff",
+  "version": "10",
+  "dialect": "postgres",
+  "id": "6fab23c0-bd85-44c8-bd69-d61d0a49e9dd",
+  "prevIds": [
+    "3455e533-67a5-4f31-b3de-1564d3fbfea1"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "attendance_policies"
+      ],
+      "writes": [
+        "s|tbl|public.attendance_policies",
+        "n|tbl|public.attendance_policies",
+        "e|tbl|public.attendance_policies",
+        "n|rel|public.attendance_policies",
+        "n|type|public.attendance_policies",
+        "n|rel|public.attendance_policies_pkey",
+        "n|rel|public.attendance_policies_name_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "employee_schedules"
+      ],
+      "writes": [
+        "s|tbl|public.employee_schedules",
+        "n|tbl|public.employee_schedules",
+        "e|tbl|public.employee_schedules",
+        "n|rel|public.employee_schedules",
+        "n|type|public.employee_schedules",
+        "n|rel|public.employee_schedules_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "schedule_details"
+      ],
+      "writes": [
+        "s|tbl|public.schedule_details",
+        "n|tbl|public.schedule_details",
+        "e|tbl|public.schedule_details",
+        "n|rel|public.schedule_details",
+        "n|type|public.schedule_details",
+        "n|rel|public.schedule_details_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "schedules"
+      ],
+      "writes": [
+        "s|tbl|public.schedules",
+        "n|tbl|public.schedules",
+        "e|tbl|public.schedules",
+        "n|rel|public.schedules",
+        "n|type|public.schedules",
+        "n|rel|public.schedules_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "attendance_policies",
+        "attendance_policies_active_default_idx"
+      ],
+      "writes": [
+        "s|idx|public.attendance_policies_active_default_idx",
+        "n|idx|public.attendance_policies_active_default_idx",
+        "e|idx|public.attendance_policies_active_default_idx",
+        "n|rel|public.attendance_policies_active_default_idx"
+      ],
+      "reads": [
+        "n|tbl|public.attendance_policies",
+        "n|sch|public",
+        "n|col|public.attendance_policies.is_active",
+        "n|col|public.attendance_policies.is_default"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "employee_schedules",
+        "employee_schedules_emp_from_uq"
+      ],
+      "writes": [
+        "s|idx|public.employee_schedules_emp_from_uq",
+        "n|idx|public.employee_schedules_emp_from_uq",
+        "e|idx|public.employee_schedules_emp_from_uq",
+        "n|rel|public.employee_schedules_emp_from_uq"
+      ],
+      "reads": [
+        "n|tbl|public.employee_schedules",
+        "n|sch|public",
+        "n|col|public.employee_schedules.employee_id",
+        "n|col|public.employee_schedules.effective_from"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "employee_schedules",
+        "employee_schedules_emp_range_idx"
+      ],
+      "writes": [
+        "s|idx|public.employee_schedules_emp_range_idx",
+        "n|idx|public.employee_schedules_emp_range_idx",
+        "e|idx|public.employee_schedules_emp_range_idx",
+        "n|rel|public.employee_schedules_emp_range_idx"
+      ],
+      "reads": [
+        "n|tbl|public.employee_schedules",
+        "n|sch|public",
+        "n|col|public.employee_schedules.employee_id",
+        "n|col|public.employee_schedules.effective_from",
+        "n|col|public.employee_schedules.effective_to"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "schedule_details",
+        "schedule_details_schedule_id_idx"
+      ],
+      "writes": [
+        "s|idx|public.schedule_details_schedule_id_idx",
+        "n|idx|public.schedule_details_schedule_id_idx",
+        "e|idx|public.schedule_details_schedule_id_idx",
+        "n|rel|public.schedule_details_schedule_id_idx"
+      ],
+      "reads": [
+        "n|tbl|public.schedule_details",
+        "n|sch|public",
+        "n|col|public.schedule_details.schedule_id"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "schedule_details",
+        "schedule_details_schedule_day_start_uq"
+      ],
+      "writes": [
+        "s|idx|public.schedule_details_schedule_day_start_uq",
+        "n|idx|public.schedule_details_schedule_day_start_uq",
+        "e|idx|public.schedule_details_schedule_day_start_uq",
+        "n|rel|public.schedule_details_schedule_day_start_uq"
+      ],
+      "reads": [
+        "n|tbl|public.schedule_details",
+        "n|sch|public",
+        "n|col|public.schedule_details.schedule_id",
+        "n|col|public.schedule_details.day_of_week",
+        "n|col|public.schedule_details.start_time"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "employee_schedules"
+      ],
+      "writes": [
+        "s|fk|public.employee_schedules.employee_schedules_employee_id_employees_employee_id_fkey",
+        "n|fk|public.employee_schedules.employee_schedules_employee_id_employees_employee_id_fkey",
+        "e|fk|public.employee_schedules.employee_schedules_employee_id_employees_employee_id_fkey",
+        "n|con|public.employee_schedules.employee_schedules_employee_id_employees_employee_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.employee_schedules",
+        "n|sch|public",
+        "n|tbl|public.employees",
+        "n|sch|public",
+        "n|col|public.employee_schedules.employee_id",
+        "n|col|public.employees.employee_id",
+        "e|uniqueness|public.employees.employee_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "employee_schedules"
+      ],
+      "writes": [
+        "s|fk|public.employee_schedules.employee_schedules_schedule_id_schedules_id_fkey",
+        "n|fk|public.employee_schedules.employee_schedules_schedule_id_schedules_id_fkey",
+        "e|fk|public.employee_schedules.employee_schedules_schedule_id_schedules_id_fkey",
+        "n|con|public.employee_schedules.employee_schedules_schedule_id_schedules_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.employee_schedules",
+        "n|sch|public",
+        "n|tbl|public.schedules",
+        "n|sch|public",
+        "n|col|public.employee_schedules.schedule_id",
+        "n|col|public.schedules.id",
+        "e|uniqueness|public.schedules.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "employee_schedules"
+      ],
+      "writes": [
+        "s|fk|public.employee_schedules.employee_schedules_assigned_by_users_id_fkey",
+        "n|fk|public.employee_schedules.employee_schedules_assigned_by_users_id_fkey",
+        "e|fk|public.employee_schedules.employee_schedules_assigned_by_users_id_fkey",
+        "n|con|public.employee_schedules.employee_schedules_assigned_by_users_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.employee_schedules",
+        "n|sch|public",
+        "n|tbl|public.users",
+        "n|sch|public",
+        "n|col|public.employee_schedules.assigned_by",
+        "n|col|public.users.id",
+        "e|uniqueness|public.users.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "schedule_details"
+      ],
+      "writes": [
+        "s|fk|public.schedule_details.schedule_details_schedule_id_schedules_id_fkey",
+        "n|fk|public.schedule_details.schedule_details_schedule_id_schedules_id_fkey",
+        "e|fk|public.schedule_details.schedule_details_schedule_id_schedules_id_fkey",
+        "n|con|public.schedule_details.schedule_details_schedule_id_schedules_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.schedule_details",
+        "n|sch|public",
+        "n|tbl|public.schedules",
+        "n|sch|public",
+        "n|col|public.schedule_details.schedule_id",
+        "n|col|public.schedules.id",
+        "e|uniqueness|public.schedules.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "schedules"
+      ],
+      "writes": [
+        "s|fk|public.schedules.schedules_attendance_policy_id_attendance_policies_id_fkey",
+        "n|fk|public.schedules.schedules_attendance_policy_id_attendance_policies_id_fkey",
+        "e|fk|public.schedules.schedules_attendance_policy_id_attendance_policies_id_fkey",
+        "n|con|public.schedules.schedules_attendance_policy_id_attendance_policies_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.schedules",
+        "n|sch|public",
+        "n|tbl|public.attendance_policies",
+        "n|sch|public",
+        "n|col|public.schedules.attendance_policy_id",
+        "n|col|public.attendance_policies.id",
+        "e|uniqueness|public.attendance_policies.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "attendance_policies",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "employee_schedules",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "schedule_details",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "schedules",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "name",
+        "type": "varchar(100)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "description",
+        "type": "varchar(255)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "tardy_grace_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "tardy_count_from",
+        "type": "varchar(20)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'schedule_start'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "absent_after_late_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "undertime_grace_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "early_in_window_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "14400",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "late_out_window_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "14400",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "duplicate_tap_window_seconds",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "120",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "is_default",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "false",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "employee_id",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "schedule_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "effective_from",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "effective_to",
+        "type": "date",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "assigned_by",
+        "type": "uuid",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "schedule_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "day_of_week",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "code_day",
+        "type": "varchar(3)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "is_rest_day",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "false",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "start_time",
+        "type": "time",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "end_time",
+        "type": "time",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "tardy_start",
+        "type": "time",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "undertime_start",
+        "type": "time",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "early_dismissal_start",
+        "type": "time",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "name",
+        "type": "varchar(100)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "timezone",
+        "type": "varchar(50)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'Asia/Manila'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "attendance_policy_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "attendance_policies_active_default_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "is_default",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "employee_schedules_emp_from_uq",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "employee_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "effective_from",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "employee_schedules_emp_range_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "employee_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "effective_from",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "effective_to",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "schedule_details_schedule_id_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "schedule_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "schedule_details_schedule_day_start_uq",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "schedule_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "day_of_week",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "start_time",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "employee_schedules_employee_id_employees_employee_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "employee_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "employees",
+        "columnsTo": [
+          "employee_id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "RESTRICT",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "employee_schedules_schedule_id_schedules_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "schedule_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "schedules",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "RESTRICT",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "employee_schedules_assigned_by_users_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "assigned_by"
+        ],
+        "schemaTo": "public",
+        "tableTo": "users",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "schedule_details_schedule_id_schedules_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "schedule_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "schedules",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "CASCADE",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "schedules_attendance_policy_id_attendance_policies_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "attendance_policy_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "attendance_policies",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "attendance_policies_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "employee_schedules",
+        "name": "employee_schedules_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedule_details",
+        "name": "schedule_details_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "schedules",
+        "name": "schedules_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "attendance_policies",
+        "name": "attendance_policies_name_key",
+        "nameExplicit": false,
+        "columns": [
+          "name"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    }
+  ]
+}

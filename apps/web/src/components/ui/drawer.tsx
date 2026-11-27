@@ -32,11 +32,24 @@ export function DrawerOverlay({
   );
 }
 
+const RIGHT_DRAWER_SIZES = {
+  sm: "data-[vaul-drawer-direction=right]:max-w-md",
+  md: "data-[vaul-drawer-direction=right]:max-w-xl",
+  lg: "data-[vaul-drawer-direction=right]:max-w-2xl",
+  xl: "data-[vaul-drawer-direction=right]:max-w-3xl",
+  "2xl": "data-[vaul-drawer-direction=right]:max-w-4xl",
+} as const;
+
+export type DrawerSize = keyof typeof RIGHT_DRAWER_SIZES;
+
 export function DrawerContent({
   className,
   children,
+  size = "lg",
   ...props
-}: ComponentProps<typeof DrawerPrimitive.Content>) {
+}: ComponentProps<typeof DrawerPrimitive.Content> & {
+  size?: DrawerSize;
+}) {
   return (
     <DrawerPortal>
       <DrawerOverlay />
@@ -44,7 +57,8 @@ export function DrawerContent({
         data-slot="drawer-content"
         className={cn(
           "group/drawer-content fixed z-50 flex flex-col bg-card text-card-foreground shadow-2xl outline-none",
-          "data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-full data-[vaul-drawer-direction=right]:max-w-2xl data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:border-border",
+          "data-[vaul-drawer-direction=right]:inset-y-0 data-[vaul-drawer-direction=right]:right-0 data-[vaul-drawer-direction=right]:w-full data-[vaul-drawer-direction=right]:border-l data-[vaul-drawer-direction=right]:border-border",
+          RIGHT_DRAWER_SIZES[size],
           "data-[vaul-drawer-direction=left]:inset-y-0 data-[vaul-drawer-direction=left]:left-0 data-[vaul-drawer-direction=left]:w-full data-[vaul-drawer-direction=left]:max-w-md data-[vaul-drawer-direction=left]:border-r data-[vaul-drawer-direction=left]:border-border",
           "data-[vaul-drawer-direction=bottom]:inset-x-0 data-[vaul-drawer-direction=bottom]:bottom-0 data-[vaul-drawer-direction=bottom]:max-h-[85vh] data-[vaul-drawer-direction=bottom]:rounded-t-xl data-[vaul-drawer-direction=bottom]:border-t data-[vaul-drawer-direction=bottom]:border-border",
           className,

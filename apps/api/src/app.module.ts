@@ -1,15 +1,18 @@
 import { Module, StandardSchemaValidationPipe } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { LoggerModule } from "nestjs-pino";
+import { AttendancePoliciesModule } from "./attendance-policies/attendance-policies.module.js";
 import { AuthModule } from "./auth/auth.module.js";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter.js";
 import { ConfigModule, ENV } from "./config/config.module.js";
 import type { AppEnv } from "./config/env.js";
+import { CutOffsModule } from "./cut-offs/cut-offs.module.js";
 import { DatabaseModule } from "./database/database.module.js";
 import { EmployeesModule } from "./employees/employees.module.js";
 import { HealthModule } from "./health/health.module.js";
 import { OrganizationModule } from "./organization/organization.module.js";
 import { ReferenceSetupModule } from "./reference-setup/reference-setup.module.js";
+import { SchedulesModule } from "./schedules/schedules.module.js";
 import { UsersModule } from "./users/users.module.js";
 
 @Module({
@@ -26,9 +29,12 @@ import { UsersModule } from "./users/users.module.js";
     }),
     DatabaseModule,
     AuthModule,
+    AttendancePoliciesModule,
+    CutOffsModule,
     EmployeesModule,
     OrganizationModule,
     ReferenceSetupModule,
+    SchedulesModule,
     HealthModule,
     UsersModule,
   ],

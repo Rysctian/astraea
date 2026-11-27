@@ -13,6 +13,9 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected.index'
 import { Route as ProtectedOrganizationRouteImport } from './routes/_protected.organization'
+import { Route as ProtectedAttendanceCutOffsRouteImport } from './routes/_protected.attendance.cut-offs'
+import { Route as ProtectedAttendancePoliciesRouteImport } from './routes/_protected.attendance.policies'
+import { Route as ProtectedAttendanceSchedulesRouteImport } from './routes/_protected.attendance.schedules'
 import { Route as ProtectedEmployeesIndexRouteImport } from './routes/_protected.employees.index'
 import { Route as ProtectedEmployeesEmployeeIdRouteImport } from './routes/_protected.employees.$employeeId'
 import { Route as ProtectedSetupAdministrativeRouteImport } from './routes/_protected.setup.administrative'
@@ -38,6 +41,24 @@ const ProtectedOrganizationRoute = ProtectedOrganizationRouteImport.update({
   path: '/organization',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedAttendanceCutOffsRoute =
+  ProtectedAttendanceCutOffsRouteImport.update({
+    id: '/attendance/cut-offs',
+    path: '/attendance/cut-offs',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAttendancePoliciesRoute =
+  ProtectedAttendancePoliciesRouteImport.update({
+    id: '/attendance/policies',
+    path: '/attendance/policies',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAttendanceSchedulesRoute =
+  ProtectedAttendanceSchedulesRouteImport.update({
+    id: '/attendance/schedules',
+    path: '/attendance/schedules',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedEmployeesIndexRoute = ProtectedEmployeesIndexRouteImport.update({
   id: '/employees/',
   path: '/employees/',
@@ -72,6 +93,9 @@ export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
   '/login': typeof LoginRoute
   '/organization': typeof ProtectedOrganizationRoute
+  '/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
+  '/attendance/policies': typeof ProtectedAttendancePoliciesRoute
+  '/attendance/schedules': typeof ProtectedAttendanceSchedulesRoute
   '/employees/$employeeId': typeof ProtectedEmployeesEmployeeIdRoute
   '/setup/administrative': typeof ProtectedSetupAdministrativeRoute
   '/setup/employee-info': typeof ProtectedSetupEmployeeInfoRoute
@@ -82,6 +106,9 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/organization': typeof ProtectedOrganizationRoute
   '/': typeof ProtectedIndexRoute
+  '/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
+  '/attendance/policies': typeof ProtectedAttendancePoliciesRoute
+  '/attendance/schedules': typeof ProtectedAttendanceSchedulesRoute
   '/employees/$employeeId': typeof ProtectedEmployeesEmployeeIdRoute
   '/setup/administrative': typeof ProtectedSetupAdministrativeRoute
   '/setup/employee-info': typeof ProtectedSetupEmployeeInfoRoute
@@ -94,6 +121,9 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_protected/organization': typeof ProtectedOrganizationRoute
   '/_protected/': typeof ProtectedIndexRoute
+  '/_protected/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
+  '/_protected/attendance/policies': typeof ProtectedAttendancePoliciesRoute
+  '/_protected/attendance/schedules': typeof ProtectedAttendanceSchedulesRoute
   '/_protected/employees/$employeeId': typeof ProtectedEmployeesEmployeeIdRoute
   '/_protected/setup/administrative': typeof ProtectedSetupAdministrativeRoute
   '/_protected/setup/employee-info': typeof ProtectedSetupEmployeeInfoRoute
@@ -106,6 +136,9 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/organization'
+    | '/attendance/cut-offs'
+    | '/attendance/policies'
+    | '/attendance/schedules'
     | '/employees/$employeeId'
     | '/setup/administrative'
     | '/setup/employee-info'
@@ -116,6 +149,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/organization'
     | '/'
+    | '/attendance/cut-offs'
+    | '/attendance/policies'
+    | '/attendance/schedules'
     | '/employees/$employeeId'
     | '/setup/administrative'
     | '/setup/employee-info'
@@ -127,6 +163,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/_protected/organization'
     | '/_protected/'
+    | '/_protected/attendance/cut-offs'
+    | '/_protected/attendance/policies'
+    | '/_protected/attendance/schedules'
     | '/_protected/employees/$employeeId'
     | '/_protected/setup/administrative'
     | '/_protected/setup/employee-info'
@@ -167,6 +206,27 @@ declare module '@tanstack/react-router' {
       path: '/organization'
       fullPath: '/organization'
       preLoaderRoute: typeof ProtectedOrganizationRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/attendance/cut-offs': {
+      id: '/_protected/attendance/cut-offs'
+      path: '/attendance/cut-offs'
+      fullPath: '/attendance/cut-offs'
+      preLoaderRoute: typeof ProtectedAttendanceCutOffsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/attendance/policies': {
+      id: '/_protected/attendance/policies'
+      path: '/attendance/policies'
+      fullPath: '/attendance/policies'
+      preLoaderRoute: typeof ProtectedAttendancePoliciesRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/attendance/schedules': {
+      id: '/_protected/attendance/schedules'
+      path: '/attendance/schedules'
+      fullPath: '/attendance/schedules'
+      preLoaderRoute: typeof ProtectedAttendanceSchedulesRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/employees/': {
@@ -210,6 +270,9 @@ declare module '@tanstack/react-router' {
 interface ProtectedRouteChildren {
   ProtectedOrganizationRoute: typeof ProtectedOrganizationRoute
   ProtectedIndexRoute: typeof ProtectedIndexRoute
+  ProtectedAttendanceCutOffsRoute: typeof ProtectedAttendanceCutOffsRoute
+  ProtectedAttendancePoliciesRoute: typeof ProtectedAttendancePoliciesRoute
+  ProtectedAttendanceSchedulesRoute: typeof ProtectedAttendanceSchedulesRoute
   ProtectedEmployeesEmployeeIdRoute: typeof ProtectedEmployeesEmployeeIdRoute
   ProtectedSetupAdministrativeRoute: typeof ProtectedSetupAdministrativeRoute
   ProtectedSetupEmployeeInfoRoute: typeof ProtectedSetupEmployeeInfoRoute
@@ -220,6 +283,9 @@ interface ProtectedRouteChildren {
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedOrganizationRoute: ProtectedOrganizationRoute,
   ProtectedIndexRoute: ProtectedIndexRoute,
+  ProtectedAttendanceCutOffsRoute: ProtectedAttendanceCutOffsRoute,
+  ProtectedAttendancePoliciesRoute: ProtectedAttendancePoliciesRoute,
+  ProtectedAttendanceSchedulesRoute: ProtectedAttendanceSchedulesRoute,
   ProtectedEmployeesEmployeeIdRoute: ProtectedEmployeesEmployeeIdRoute,
   ProtectedSetupAdministrativeRoute: ProtectedSetupAdministrativeRoute,
   ProtectedSetupEmployeeInfoRoute: ProtectedSetupEmployeeInfoRoute,

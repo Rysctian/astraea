@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverLabel } from "@/components/ui/popover";
 import { Select } from "@/components/ui/select";
+import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import { useWorkspaceActions } from "@/lib/workspace-actions";
 import { OrgEntityDrawer } from "./org-drawer";
@@ -351,40 +352,16 @@ export function OrganizationalSetupPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div
-            role="tablist"
-            aria-label="Organizational view mode"
-            className="inline-flex items-center rounded-md border border-border/80 bg-muted/60 p-0.5"
-          >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={viewMode === "table"}
-              onClick={() => setViewMode("table")}
-              className={`inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-[5px] px-2.5 text-xs transition-colors ${
-                viewMode === "table"
-                  ? "bg-background font-medium text-foreground shadow-2xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
+          <TabsList aria-label="Organizational view mode">
+            <TabsTrigger active={viewMode === "table"} onClick={() => setViewMode("table")}>
               <Table2 className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Catalogs</span>
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={viewMode === "tree"}
-              onClick={() => setViewMode("tree")}
-              className={`inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-[5px] px-2.5 text-xs transition-colors ${
-                viewMode === "tree"
-                  ? "bg-background font-medium text-foreground shadow-2xs"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
-            >
+            </TabsTrigger>
+            <TabsTrigger active={viewMode === "tree"} onClick={() => setViewMode("tree")}>
               <GitFork className="h-3.5 w-3.5" aria-hidden="true" />
               <span>Hierarchy Tree</span>
-            </button>
-          </div>
+            </TabsTrigger>
+          </TabsList>
 
           <Button
             type="button"

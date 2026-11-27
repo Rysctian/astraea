@@ -15,6 +15,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { type ApiEmployee, api } from "@/lib/api";
 import { EmployeeFormSections } from "./employee-form-sections";
 import {
@@ -95,30 +96,19 @@ export function EmployeeCreateDrawer({
         onOpenChange(next);
       }}
     >
-      <DrawerContent>
+      <DrawerContent size="xl">
         <DrawerHeader>
           <DrawerTitle>Add Employee (201 Onboarding)</DrawerTitle>
           <DrawerDescription>
             Generates a unique EMP-YYYYNNNN ID and atomically provisions a linked login account.
           </DrawerDescription>
 
-          <div role="tablist" aria-label="Onboarding steps" className="mt-4 flex flex-wrap gap-1.5">
+          <TabsList aria-label="Onboarding steps" className="mt-4">
             {EMPLOYEE_FORM_TABS.map((tab) => {
               const selected = activeTab === tab.id;
               const errored = hasEmployeeTabErrors(tab.id, form.formState.errors);
               return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={selected}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`inline-flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-1.5 text-xs font-medium transition-colors ${
-                    selected
-                      ? "border-primary/40 bg-primary/10 text-primary"
-                      : "border-border bg-background text-muted-foreground hover:text-foreground"
-                  }`}
-                >
+                <TabsTrigger key={tab.id} active={selected} onClick={() => setActiveTab(tab.id)}>
                   <span>{tab.label}</span>
                   {errored ? (
                     <span
@@ -127,10 +117,10 @@ export function EmployeeCreateDrawer({
                       aria-label={`${tab.label} has errors`}
                     />
                   ) : null}
-                </button>
+                </TabsTrigger>
               );
             })}
-          </div>
+          </TabsList>
         </DrawerHeader>
 
         <form onSubmit={onSubmit} noValidate className="flex min-h-0 flex-1 flex-col">

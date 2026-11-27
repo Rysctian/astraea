@@ -1,8 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import { CalendarClock, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Select } from "@/components/ui/select";
-import type { ApiEmployee, ApiUser } from "@/lib/api";
+import { type ApiEmployee, type ApiUser, api } from "@/lib/api";
 
 export function LinkedAccountCard({
   employee,
@@ -53,6 +55,13 @@ export function LinkedAccountCard({
 
 export function ScheduleLeaveSummaryTab({ employeeId }: { employeeId: string }) {
   const [leaveYear, setLeaveYear] = useState(String(new Date().getFullYear()));
+  const schedulesQuery = useQuery({
+    queryKey: ["schedules", "assignments", "employee-profile", employeeId],
+    queryFn: () => api.listEmployeeSchedules({ employeeId, page: 1, pageSize: 10 }),
+    enabled: Boolean(employeeId),
+  });
+
+  const assignments = schedulesQuery.data?.data ?? [];
 
   return (
     <div className="space-y-4">
@@ -81,14 +90,52 @@ export function ScheduleLeaveSummaryTab({ employeeId }: { employeeId: string }) 
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-lg border border-border bg-card p-4">
-          <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
-            <CalendarClock className="h-4 w-4 text-primary" aria-hidden="true" />
-            <span>Assigned Schedule History</span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+              <CalendarClock className="h-4 w-4 text-primary" aria-hidden="true" />
+              <span>Assigned Schedule History</span>
+            </div>
+            <Link
+              to="/attendance/schedules"
+              className="text-[11px] font-medium text-primary hover:underline"
+            >
+              Manage schedules
+            </Link>
           </div>
-          <p className="mt-3 text-xs text-muted-foreground">
-            No shift schedule assignments recorded yet for{" "}
-            <span className="font-mono text-foreground">{employeeId}</span>.
-          </p>
+          {schedulesQuery.isPending ? (
+            <p className="mt-3 text-xs text-muted-foreground">Loading schedule assignments...</p>
+          ) : assignments.length === 0 ? (
+            <p className="mt-3 text-xs text-muted-foreground">
+              No shift schedule assignments recorded yet for{" "}
+              <span className="font-mono text-foreground">{employeeId}</span>.
+            </p>
+          ) : (
+            <ul className="mt-3 space-y-2">
+              {assignments.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex items-center justify-between gap-2 rounded-md border border-border/70 bg-muted/20 px-3 py-2 text-xs"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-foreground">{item.scheduleName}</p>
+                    <p className="tabular-nums text-[11px] text-muted-foreground">
+                      {item.effectiveFrom} → {item.effectiveTo ?? "Ongoing"} (
+                      {item.scheduleTimezone})
+                    </p>
+                  </div>
+                  {item.isCurrent ? (
+                    <Badge variant="emerald" dotColor="bg-emerald-500">
+                      Current
+                    </Badge>
+                  ) : item.isFuture ? (
+                    <Badge variant="blue">Upcoming</Badge>
+                  ) : (
+                    <Badge variant="neutral">History</Badge>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="rounded-lg border border-border bg-card p-4">

@@ -1,6 +1,8 @@
 import { getTableConfig } from "drizzle-orm/pg-core";
 import { describe, expect, it } from "vitest";
 import { createDb } from "../client.js";
+import { attendancePolicies } from "./attendance-policies.js";
+import { cutOffPeriods, cutOffs } from "./cut-offs.js";
 import { employeeIdSequences, employees } from "./employees.js";
 import {
   departments,
@@ -11,6 +13,7 @@ import {
   sections,
 } from "./organization.js";
 import { setupReferenceItems } from "./reference-items.js";
+import { employeeSchedules, scheduleDetails, schedules } from "./schedules.js";
 import { users } from "./users.js";
 
 describe("database schema", () => {
@@ -44,7 +47,7 @@ describe("database schema", () => {
     expect(seqConfig.name).toBe("employee_id_sequences");
   });
 
-  it("defines organizational setup and reference catalog tables", () => {
+  it("defines organizational setup, reference catalog, attendance policy, and schedule tables", () => {
     expect(getTableConfig(offices).name).toBe("offices");
     expect(getTableConfig(departments).name).toBe("departments");
     expect(getTableConfig(divisions).name).toBe("divisions");
@@ -52,6 +55,12 @@ describe("database schema", () => {
     expect(getTableConfig(positions).name).toBe("positions");
     expect(getTableConfig(reportsItems).name).toBe("reports_items");
     expect(getTableConfig(setupReferenceItems).name).toBe("setup_reference_items");
+    expect(getTableConfig(attendancePolicies).name).toBe("attendance_policies");
+    expect(getTableConfig(schedules).name).toBe("schedules");
+    expect(getTableConfig(scheduleDetails).name).toBe("schedule_details");
+    expect(getTableConfig(employeeSchedules).name).toBe("employee_schedules");
+    expect(getTableConfig(cutOffs).name).toBe("cut_offs");
+    expect(getTableConfig(cutOffPeriods).name).toBe("cut_off_periods");
   });
 
   it("throws when createDb receives an empty connection string", () => {

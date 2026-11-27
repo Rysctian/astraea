@@ -7,6 +7,7 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/lib/api";
 import { LinkedAccountCard, ScheduleLeaveSummaryTab } from "./employee-detail-tabs";
 import { EmployeeFormSections } from "./employee-form-sections";
@@ -241,28 +242,13 @@ export function EmployeeDetailPage({ employeeId }: { employeeId: string }) {
           </div>
         </div>
 
-        <div
-          role="tablist"
-          aria-label="Employee 201 sections"
-          className="mt-5 flex flex-wrap gap-1"
-        >
+        <TabsList aria-label="Employee 201 sections" className="mt-5">
           {DETAIL_TABS.map((tab) => {
             const selected = activeTab === tab.id;
             const errored =
               tab.id !== "schedule" && hasEmployeeTabErrors(tab.id, form.formState.errors);
             return (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={selected}
-                onClick={() => setActiveTab(tab.id)}
-                className={`inline-flex cursor-pointer items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                  selected
-                    ? "border border-border bg-background text-foreground shadow-2xs"
-                    : "text-muted-foreground hover:bg-black/[0.04] hover:text-foreground"
-                }`}
-              >
+              <TabsTrigger key={tab.id} active={selected} onClick={() => setActiveTab(tab.id)}>
                 <span>{tab.label}</span>
                 {errored ? (
                   <span
@@ -271,10 +257,10 @@ export function EmployeeDetailPage({ employeeId }: { employeeId: string }) {
                     aria-label={`${tab.label} has errors`}
                   />
                 ) : null}
-              </button>
+              </TabsTrigger>
             );
           })}
-        </div>
+        </TabsList>
       </div>
 
       <div className="mx-auto w-full max-w-4xl px-6 py-6">
