@@ -1,0 +1,3133 @@
+{
+  "type": "diff",
+  "version": "10",
+  "dialect": "postgres",
+  "id": "3455e533-67a5-4f31-b3de-1564d3fbfea1",
+  "prevIds": [
+    "84944f5f-734c-4e41-bc8b-744d9c3b76fc"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "departments"
+      ],
+      "writes": [
+        "s|tbl|public.departments",
+        "n|tbl|public.departments",
+        "e|tbl|public.departments",
+        "n|rel|public.departments",
+        "n|type|public.departments",
+        "n|rel|public.departments_pkey",
+        "n|rel|public.departments_code_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "divisions"
+      ],
+      "writes": [
+        "s|tbl|public.divisions",
+        "n|tbl|public.divisions",
+        "e|tbl|public.divisions",
+        "n|rel|public.divisions",
+        "n|type|public.divisions",
+        "n|rel|public.divisions_pkey",
+        "n|rel|public.divisions_code_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "offices"
+      ],
+      "writes": [
+        "s|tbl|public.offices",
+        "n|tbl|public.offices",
+        "e|tbl|public.offices",
+        "n|rel|public.offices",
+        "n|type|public.offices",
+        "n|rel|public.offices_pkey",
+        "n|rel|public.offices_code_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "positions"
+      ],
+      "writes": [
+        "s|tbl|public.positions",
+        "n|tbl|public.positions",
+        "e|tbl|public.positions",
+        "n|rel|public.positions",
+        "n|type|public.positions",
+        "n|rel|public.positions_pkey",
+        "n|rel|public.positions_code_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "reports_items"
+      ],
+      "writes": [
+        "s|tbl|public.reports_items",
+        "n|tbl|public.reports_items",
+        "e|tbl|public.reports_items",
+        "n|rel|public.reports_items",
+        "n|type|public.reports_items",
+        "n|rel|public.reports_items_pkey",
+        "n|rel|public.reports_items_code_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "sections"
+      ],
+      "writes": [
+        "s|tbl|public.sections",
+        "n|tbl|public.sections",
+        "e|tbl|public.sections",
+        "n|rel|public.sections",
+        "n|type|public.sections",
+        "n|rel|public.sections_pkey",
+        "n|rel|public.sections_code_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "setup_reference_items"
+      ],
+      "writes": [
+        "s|tbl|public.setup_reference_items",
+        "n|tbl|public.setup_reference_items",
+        "e|tbl|public.setup_reference_items",
+        "n|rel|public.setup_reference_items",
+        "n|type|public.setup_reference_items",
+        "n|rel|public.setup_reference_items_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "departments",
+        "departments_office_active_idx"
+      ],
+      "writes": [
+        "s|idx|public.departments_office_active_idx",
+        "n|idx|public.departments_office_active_idx",
+        "e|idx|public.departments_office_active_idx",
+        "n|rel|public.departments_office_active_idx"
+      ],
+      "reads": [
+        "n|tbl|public.departments",
+        "n|sch|public",
+        "n|col|public.departments.office_id",
+        "n|col|public.departments.is_active"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "divisions",
+        "divisions_dept_active_idx"
+      ],
+      "writes": [
+        "s|idx|public.divisions_dept_active_idx",
+        "n|idx|public.divisions_dept_active_idx",
+        "e|idx|public.divisions_dept_active_idx",
+        "n|rel|public.divisions_dept_active_idx"
+      ],
+      "reads": [
+        "n|tbl|public.divisions",
+        "n|sch|public",
+        "n|col|public.divisions.department_id",
+        "n|col|public.divisions.is_active"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "offices",
+        "offices_type_active_idx"
+      ],
+      "writes": [
+        "s|idx|public.offices_type_active_idx",
+        "n|idx|public.offices_type_active_idx",
+        "e|idx|public.offices_type_active_idx",
+        "n|rel|public.offices_type_active_idx"
+      ],
+      "reads": [
+        "n|tbl|public.offices",
+        "n|sch|public",
+        "n|col|public.offices.type",
+        "n|col|public.offices.is_active"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "positions",
+        "positions_dept_active_idx"
+      ],
+      "writes": [
+        "s|idx|public.positions_dept_active_idx",
+        "n|idx|public.positions_dept_active_idx",
+        "e|idx|public.positions_dept_active_idx",
+        "n|rel|public.positions_dept_active_idx"
+      ],
+      "reads": [
+        "n|tbl|public.positions",
+        "n|sch|public",
+        "n|col|public.positions.department_id",
+        "n|col|public.positions.is_active"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "reports_items",
+        "reports_items_office_dept_active_idx"
+      ],
+      "writes": [
+        "s|idx|public.reports_items_office_dept_active_idx",
+        "n|idx|public.reports_items_office_dept_active_idx",
+        "e|idx|public.reports_items_office_dept_active_idx",
+        "n|rel|public.reports_items_office_dept_active_idx"
+      ],
+      "reads": [
+        "n|tbl|public.reports_items",
+        "n|sch|public",
+        "n|col|public.reports_items.office_id",
+        "n|col|public.reports_items.department_id",
+        "n|col|public.reports_items.is_active"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "sections",
+        "sections_div_dept_active_idx"
+      ],
+      "writes": [
+        "s|idx|public.sections_div_dept_active_idx",
+        "n|idx|public.sections_div_dept_active_idx",
+        "e|idx|public.sections_div_dept_active_idx",
+        "n|rel|public.sections_div_dept_active_idx"
+      ],
+      "reads": [
+        "n|tbl|public.sections",
+        "n|sch|public",
+        "n|col|public.sections.division_id",
+        "n|col|public.sections.department_id",
+        "n|col|public.sections.is_active"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "setup_reference_items",
+        "setup_ref_category_code_uidx"
+      ],
+      "writes": [
+        "s|idx|public.setup_ref_category_code_uidx",
+        "n|idx|public.setup_ref_category_code_uidx",
+        "e|idx|public.setup_ref_category_code_uidx",
+        "n|rel|public.setup_ref_category_code_uidx"
+      ],
+      "reads": [
+        "n|tbl|public.setup_reference_items",
+        "n|sch|public",
+        "n|col|public.setup_reference_items.category",
+        "n|col|public.setup_reference_items.code"
+      ]
+    },
+    {
+      "statementType": "create_index",
+      "statementTarget": [
+        "index",
+        "public",
+        "setup_reference_items",
+        "setup_ref_group_category_active_idx"
+      ],
+      "writes": [
+        "s|idx|public.setup_ref_group_category_active_idx",
+        "n|idx|public.setup_ref_group_category_active_idx",
+        "e|idx|public.setup_ref_group_category_active_idx",
+        "n|rel|public.setup_ref_group_category_active_idx"
+      ],
+      "reads": [
+        "n|tbl|public.setup_reference_items",
+        "n|sch|public",
+        "n|col|public.setup_reference_items.group",
+        "n|col|public.setup_reference_items.category",
+        "n|col|public.setup_reference_items.is_active"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "departments"
+      ],
+      "writes": [
+        "s|fk|public.departments.departments_office_id_offices_id_fkey",
+        "n|fk|public.departments.departments_office_id_offices_id_fkey",
+        "e|fk|public.departments.departments_office_id_offices_id_fkey",
+        "n|con|public.departments.departments_office_id_offices_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.departments",
+        "n|sch|public",
+        "n|tbl|public.offices",
+        "n|sch|public",
+        "n|col|public.departments.office_id",
+        "n|col|public.offices.id",
+        "e|uniqueness|public.offices.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "departments"
+      ],
+      "writes": [
+        "s|fk|public.departments.departments_head_employee_id_employees_employee_id_fkey",
+        "n|fk|public.departments.departments_head_employee_id_employees_employee_id_fkey",
+        "e|fk|public.departments.departments_head_employee_id_employees_employee_id_fkey",
+        "n|con|public.departments.departments_head_employee_id_employees_employee_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.departments",
+        "n|sch|public",
+        "n|tbl|public.employees",
+        "n|sch|public",
+        "n|col|public.departments.head_employee_id",
+        "n|col|public.employees.employee_id",
+        "e|uniqueness|public.employees.employee_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "divisions"
+      ],
+      "writes": [
+        "s|fk|public.divisions.divisions_department_id_departments_id_fkey",
+        "n|fk|public.divisions.divisions_department_id_departments_id_fkey",
+        "e|fk|public.divisions.divisions_department_id_departments_id_fkey",
+        "n|con|public.divisions.divisions_department_id_departments_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.divisions",
+        "n|sch|public",
+        "n|tbl|public.departments",
+        "n|sch|public",
+        "n|col|public.divisions.department_id",
+        "n|col|public.departments.id",
+        "e|uniqueness|public.departments.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "divisions"
+      ],
+      "writes": [
+        "s|fk|public.divisions.divisions_head_employee_id_employees_employee_id_fkey",
+        "n|fk|public.divisions.divisions_head_employee_id_employees_employee_id_fkey",
+        "e|fk|public.divisions.divisions_head_employee_id_employees_employee_id_fkey",
+        "n|con|public.divisions.divisions_head_employee_id_employees_employee_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.divisions",
+        "n|sch|public",
+        "n|tbl|public.employees",
+        "n|sch|public",
+        "n|col|public.divisions.head_employee_id",
+        "n|col|public.employees.employee_id",
+        "e|uniqueness|public.employees.employee_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "offices"
+      ],
+      "writes": [
+        "s|fk|public.offices.offices_parent_id_offices_id_fkey",
+        "n|fk|public.offices.offices_parent_id_offices_id_fkey",
+        "e|fk|public.offices.offices_parent_id_offices_id_fkey",
+        "n|con|public.offices.offices_parent_id_offices_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.offices",
+        "n|sch|public",
+        "n|tbl|public.offices",
+        "n|sch|public",
+        "n|col|public.offices.parent_id",
+        "n|col|public.offices.id",
+        "e|uniqueness|public.offices.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "offices"
+      ],
+      "writes": [
+        "s|fk|public.offices.offices_head_employee_id_employees_employee_id_fkey",
+        "n|fk|public.offices.offices_head_employee_id_employees_employee_id_fkey",
+        "e|fk|public.offices.offices_head_employee_id_employees_employee_id_fkey",
+        "n|con|public.offices.offices_head_employee_id_employees_employee_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.offices",
+        "n|sch|public",
+        "n|tbl|public.employees",
+        "n|sch|public",
+        "n|col|public.offices.head_employee_id",
+        "n|col|public.employees.employee_id",
+        "e|uniqueness|public.employees.employee_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "positions"
+      ],
+      "writes": [
+        "s|fk|public.positions.positions_department_id_departments_id_fkey",
+        "n|fk|public.positions.positions_department_id_departments_id_fkey",
+        "e|fk|public.positions.positions_department_id_departments_id_fkey",
+        "n|con|public.positions.positions_department_id_departments_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.positions",
+        "n|sch|public",
+        "n|tbl|public.departments",
+        "n|sch|public",
+        "n|col|public.positions.department_id",
+        "n|col|public.departments.id",
+        "e|uniqueness|public.departments.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "positions"
+      ],
+      "writes": [
+        "s|fk|public.positions.positions_division_id_divisions_id_fkey",
+        "n|fk|public.positions.positions_division_id_divisions_id_fkey",
+        "e|fk|public.positions.positions_division_id_divisions_id_fkey",
+        "n|con|public.positions.positions_division_id_divisions_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.positions",
+        "n|sch|public",
+        "n|tbl|public.divisions",
+        "n|sch|public",
+        "n|col|public.positions.division_id",
+        "n|col|public.divisions.id",
+        "e|uniqueness|public.divisions.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "positions"
+      ],
+      "writes": [
+        "s|fk|public.positions.positions_section_id_sections_id_fkey",
+        "n|fk|public.positions.positions_section_id_sections_id_fkey",
+        "e|fk|public.positions.positions_section_id_sections_id_fkey",
+        "n|con|public.positions.positions_section_id_sections_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.positions",
+        "n|sch|public",
+        "n|tbl|public.sections",
+        "n|sch|public",
+        "n|col|public.positions.section_id",
+        "n|col|public.sections.id",
+        "e|uniqueness|public.sections.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "positions"
+      ],
+      "writes": [
+        "s|fk|public.positions.positions_reports_to_position_id_positions_id_fkey",
+        "n|fk|public.positions.positions_reports_to_position_id_positions_id_fkey",
+        "e|fk|public.positions.positions_reports_to_position_id_positions_id_fkey",
+        "n|con|public.positions.positions_reports_to_position_id_positions_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.positions",
+        "n|sch|public",
+        "n|tbl|public.positions",
+        "n|sch|public",
+        "n|col|public.positions.reports_to_position_id",
+        "n|col|public.positions.id",
+        "e|uniqueness|public.positions.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "reports_items"
+      ],
+      "writes": [
+        "s|fk|public.reports_items.reports_items_office_id_offices_id_fkey",
+        "n|fk|public.reports_items.reports_items_office_id_offices_id_fkey",
+        "e|fk|public.reports_items.reports_items_office_id_offices_id_fkey",
+        "n|con|public.reports_items.reports_items_office_id_offices_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.reports_items",
+        "n|sch|public",
+        "n|tbl|public.offices",
+        "n|sch|public",
+        "n|col|public.reports_items.office_id",
+        "n|col|public.offices.id",
+        "e|uniqueness|public.offices.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "reports_items"
+      ],
+      "writes": [
+        "s|fk|public.reports_items.reports_items_department_id_departments_id_fkey",
+        "n|fk|public.reports_items.reports_items_department_id_departments_id_fkey",
+        "e|fk|public.reports_items.reports_items_department_id_departments_id_fkey",
+        "n|con|public.reports_items.reports_items_department_id_departments_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.reports_items",
+        "n|sch|public",
+        "n|tbl|public.departments",
+        "n|sch|public",
+        "n|col|public.reports_items.department_id",
+        "n|col|public.departments.id",
+        "e|uniqueness|public.departments.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "reports_items"
+      ],
+      "writes": [
+        "s|fk|public.reports_items.reports_items_division_id_divisions_id_fkey",
+        "n|fk|public.reports_items.reports_items_division_id_divisions_id_fkey",
+        "e|fk|public.reports_items.reports_items_division_id_divisions_id_fkey",
+        "n|con|public.reports_items.reports_items_division_id_divisions_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.reports_items",
+        "n|sch|public",
+        "n|tbl|public.divisions",
+        "n|sch|public",
+        "n|col|public.reports_items.division_id",
+        "n|col|public.divisions.id",
+        "e|uniqueness|public.divisions.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "reports_items"
+      ],
+      "writes": [
+        "s|fk|public.reports_items.reports_items_section_id_sections_id_fkey",
+        "n|fk|public.reports_items.reports_items_section_id_sections_id_fkey",
+        "e|fk|public.reports_items.reports_items_section_id_sections_id_fkey",
+        "n|con|public.reports_items.reports_items_section_id_sections_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.reports_items",
+        "n|sch|public",
+        "n|tbl|public.sections",
+        "n|sch|public",
+        "n|col|public.reports_items.section_id",
+        "n|col|public.sections.id",
+        "e|uniqueness|public.sections.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "reports_items"
+      ],
+      "writes": [
+        "s|fk|public.reports_items.reports_items_position_id_positions_id_fkey",
+        "n|fk|public.reports_items.reports_items_position_id_positions_id_fkey",
+        "e|fk|public.reports_items.reports_items_position_id_positions_id_fkey",
+        "n|con|public.reports_items.reports_items_position_id_positions_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.reports_items",
+        "n|sch|public",
+        "n|tbl|public.positions",
+        "n|sch|public",
+        "n|col|public.reports_items.position_id",
+        "n|col|public.positions.id",
+        "e|uniqueness|public.positions.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "reports_items"
+      ],
+      "writes": [
+        "s|fk|public.reports_items.reports_items_reports_to_position_id_positions_id_fkey",
+        "n|fk|public.reports_items.reports_items_reports_to_position_id_positions_id_fkey",
+        "e|fk|public.reports_items.reports_items_reports_to_position_id_positions_id_fkey",
+        "n|con|public.reports_items.reports_items_reports_to_position_id_positions_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.reports_items",
+        "n|sch|public",
+        "n|tbl|public.positions",
+        "n|sch|public",
+        "n|col|public.reports_items.reports_to_position_id",
+        "n|col|public.positions.id",
+        "e|uniqueness|public.positions.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "reports_items"
+      ],
+      "writes": [
+        "s|fk|public.reports_items.reports_items_reports_to_employee_id_employees_employee_id_fkey",
+        "n|fk|public.reports_items.reports_items_reports_to_employee_id_employees_employee_id_fkey",
+        "e|fk|public.reports_items.reports_items_reports_to_employee_id_employees_employee_id_fkey",
+        "n|con|public.reports_items.reports_items_reports_to_employee_id_employees_employee_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.reports_items",
+        "n|sch|public",
+        "n|tbl|public.employees",
+        "n|sch|public",
+        "n|col|public.reports_items.reports_to_employee_id",
+        "n|col|public.employees.employee_id",
+        "e|uniqueness|public.employees.employee_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "sections"
+      ],
+      "writes": [
+        "s|fk|public.sections.sections_division_id_divisions_id_fkey",
+        "n|fk|public.sections.sections_division_id_divisions_id_fkey",
+        "e|fk|public.sections.sections_division_id_divisions_id_fkey",
+        "n|con|public.sections.sections_division_id_divisions_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.sections",
+        "n|sch|public",
+        "n|tbl|public.divisions",
+        "n|sch|public",
+        "n|col|public.sections.division_id",
+        "n|col|public.divisions.id",
+        "e|uniqueness|public.divisions.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "sections"
+      ],
+      "writes": [
+        "s|fk|public.sections.sections_department_id_departments_id_fkey",
+        "n|fk|public.sections.sections_department_id_departments_id_fkey",
+        "e|fk|public.sections.sections_department_id_departments_id_fkey",
+        "n|con|public.sections.sections_department_id_departments_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.sections",
+        "n|sch|public",
+        "n|tbl|public.departments",
+        "n|sch|public",
+        "n|col|public.sections.department_id",
+        "n|col|public.departments.id",
+        "e|uniqueness|public.departments.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "sections"
+      ],
+      "writes": [
+        "s|fk|public.sections.sections_head_employee_id_employees_employee_id_fkey",
+        "n|fk|public.sections.sections_head_employee_id_employees_employee_id_fkey",
+        "e|fk|public.sections.sections_head_employee_id_employees_employee_id_fkey",
+        "n|con|public.sections.sections_head_employee_id_employees_employee_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.sections",
+        "n|sch|public",
+        "n|tbl|public.employees",
+        "n|sch|public",
+        "n|col|public.sections.head_employee_id",
+        "n|col|public.employees.employee_id",
+        "e|uniqueness|public.employees.employee_id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "setup_reference_items"
+      ],
+      "writes": [
+        "s|fk|public.setup_reference_items.setup_reference_items_parent_id_setup_reference_items_id_fkey",
+        "n|fk|public.setup_reference_items.setup_reference_items_parent_id_setup_reference_items_id_fkey",
+        "e|fk|public.setup_reference_items.setup_reference_items_parent_id_setup_reference_items_id_fkey",
+        "n|con|public.setup_reference_items.setup_reference_items_parent_id_setup_reference_items_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.setup_reference_items",
+        "n|sch|public",
+        "n|tbl|public.setup_reference_items",
+        "n|sch|public",
+        "n|col|public.setup_reference_items.parent_id",
+        "n|col|public.setup_reference_items.id",
+        "e|uniqueness|public.setup_reference_items.id"
+      ]
+    }
+  ],
+  "deltas": [
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "departments",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "divisions",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "offices",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "positions",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "reports_items",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "sections",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "name": "setup_reference_items",
+        "isRlsEnabled": false,
+        "entityType": "tables"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "code",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "name",
+        "type": "varchar(150)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "short_name",
+        "type": "varchar(50)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "office_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "head_employee_id",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "description",
+        "type": "varchar(255)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "sort_order",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "code",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "name",
+        "type": "varchar(150)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "short_name",
+        "type": "varchar(50)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "department_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "head_employee_id",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "description",
+        "type": "varchar(255)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "sort_order",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "code",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "name",
+        "type": "varchar(150)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "short_name",
+        "type": "varchar(50)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "type",
+        "type": "varchar(20)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "'office'",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "parent_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "head_employee_id",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "description",
+        "type": "varchar(255)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "sort_order",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "code",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "title",
+        "type": "varchar(150)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "department_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "division_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "section_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "reports_to_position_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "salary_grade",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "job_level",
+        "type": "varchar(50)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "description",
+        "type": "varchar(255)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "sort_order",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "code",
+        "type": "varchar(50)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "name",
+        "type": "varchar(150)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "office_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "department_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "division_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "section_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "position_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_to_position_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_to_employee_id",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "description",
+        "type": "varchar(255)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "sort_order",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "code",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "name",
+        "type": "varchar(150)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "short_name",
+        "type": "varchar(50)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "division_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "department_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "head_employee_id",
+        "type": "varchar(30)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "description",
+        "type": "varchar(255)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "sort_order",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "id",
+        "type": "serial",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "group",
+        "type": "varchar(40)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "category",
+        "type": "varchar(60)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "code",
+        "type": "varchar(50)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "name",
+        "type": "varchar(150)",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "description",
+        "type": "varchar(255)",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "parent_id",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "metadata",
+        "type": "jsonb",
+        "typeSchema": null,
+        "notNull": false,
+        "dimensions": 0,
+        "default": null,
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "sort_order",
+        "type": "integer",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "0",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "is_default",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "false",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "is_active",
+        "type": "boolean",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "true",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "created_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "updated_at",
+        "type": "timestamp with time zone",
+        "typeSchema": null,
+        "notNull": true,
+        "dimensions": 0,
+        "default": "now()",
+        "generated": null,
+        "identity": null,
+        "entityType": "columns"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "departments_office_active_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "office_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "divisions_dept_active_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "department_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "offices_type_active_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "type",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "positions_dept_active_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "department_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_office_dept_active_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "office_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "department_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "sections_div_dept_active_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "division_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "department_id",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "setup_ref_category_code_uidx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "category",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "code",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": true,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "setup_ref_group_category_active_idx",
+        "nameExplicit": true,
+        "columns": [
+          {
+            "value": "group",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "category",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          },
+          {
+            "value": "is_active",
+            "isExpression": false,
+            "asc": true,
+            "nullsFirst": false,
+            "opclass": null
+          }
+        ],
+        "isUnique": false,
+        "where": null,
+        "with": "",
+        "method": "btree",
+        "entityType": "indexes"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "departments_office_id_offices_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "office_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "offices",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "departments_head_employee_id_employees_employee_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "head_employee_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "employees",
+        "columnsTo": [
+          "employee_id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "divisions_department_id_departments_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "department_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "departments",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "divisions_head_employee_id_employees_employee_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "head_employee_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "employees",
+        "columnsTo": [
+          "employee_id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "offices_parent_id_offices_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "parent_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "offices",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "offices_head_employee_id_employees_employee_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "head_employee_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "employees",
+        "columnsTo": [
+          "employee_id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "positions_department_id_departments_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "department_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "departments",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "positions_division_id_divisions_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "division_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "divisions",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "positions_section_id_sections_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "section_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "sections",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "positions_reports_to_position_id_positions_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "reports_to_position_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "positions",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_office_id_offices_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "office_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "offices",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_department_id_departments_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "department_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "departments",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_division_id_divisions_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "division_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "divisions",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_section_id_sections_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "section_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "sections",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_position_id_positions_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "position_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "positions",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_reports_to_position_id_positions_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "reports_to_position_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "positions",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_reports_to_employee_id_employees_employee_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "reports_to_employee_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "employees",
+        "columnsTo": [
+          "employee_id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "sections_division_id_divisions_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "division_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "divisions",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "sections_department_id_departments_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "department_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "departments",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "sections_head_employee_id_employees_employee_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "head_employee_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "employees",
+        "columnsTo": [
+          "employee_id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "setup_reference_items_parent_id_setup_reference_items_id_fkey",
+        "nameExplicit": false,
+        "columns": [
+          "parent_id"
+        ],
+        "schemaTo": "public",
+        "tableTo": "setup_reference_items",
+        "columnsTo": [
+          "id"
+        ],
+        "onUpdate": "NO ACTION",
+        "onDelete": "SET NULL",
+        "entityType": "fks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "departments_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "divisions_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "offices_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "positions_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "sections_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "setup_reference_items",
+        "name": "setup_reference_items_pkey",
+        "columns": [
+          "id"
+        ],
+        "nameExplicit": false,
+        "entityType": "pks"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "departments",
+        "name": "departments_code_key",
+        "nameExplicit": false,
+        "columns": [
+          "code"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "divisions",
+        "name": "divisions_code_key",
+        "nameExplicit": false,
+        "columns": [
+          "code"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "offices",
+        "name": "offices_code_key",
+        "nameExplicit": false,
+        "columns": [
+          "code"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "positions",
+        "name": "positions_code_key",
+        "nameExplicit": false,
+        "columns": [
+          "code"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "reports_items",
+        "name": "reports_items_code_key",
+        "nameExplicit": false,
+        "columns": [
+          "code"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    },
+    {
+      "op": "create",
+      "row": {
+        "schema": "public",
+        "table": "sections",
+        "name": "sections_code_key",
+        "nameExplicit": false,
+        "columns": [
+          "code"
+        ],
+        "nullsNotDistinct": false,
+        "entityType": "uniques"
+      }
+    }
+  ]
+}

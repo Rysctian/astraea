@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build & cache outputs
+dist/
+.turbo/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Testing & reports
+coverage/
+playwright-report/
+test-results/
+
+# Local agent scratch
+.superpowers/
+
+# OS & editor
+.DS_Store
+Thumbs.db
