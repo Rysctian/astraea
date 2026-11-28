@@ -4,8 +4,21 @@ import { createDb } from "../client.js";
 import { applicationApprovals, approverSetups } from "./approvals.js";
 import { employeeAttendance, employeeAttendanceLogs, employeeLogs } from "./attendance.js";
 import { attendancePolicies } from "./attendance-policies.js";
+import { correctionApplicationDetails, correctionApplications } from "./corrections.js";
 import { cutOffPeriods, cutOffs } from "./cut-offs.js";
 import { employeeIdSequences, employees } from "./employees.js";
+import {
+  employeeLeaveCreditLogs,
+  employeeLeaveCredits,
+  leaveApplicationDetails,
+  leaveApplications,
+  leavePolicies,
+  leaveTypes,
+} from "./leave.js";
+import {
+  officialBusinessApplicationDetails,
+  officialBusinessApplications,
+} from "./official-business.js";
 import {
   departments,
   divisions,
@@ -76,6 +89,22 @@ describe("database schema", () => {
     expect(getTableConfig(applicationApprovals).name).toBe("application_approvals");
     expect(getTableConfig(overtimeApplications).name).toBe("overtime_applications");
     expect(getTableConfig(overtimeApplicationDetails).name).toBe("overtime_application_details");
+    expect(getTableConfig(leavePolicies).name).toBe("leave_policies");
+    expect(getTableConfig(leaveTypes).name).toBe("leave_types");
+    expect(getTableConfig(employeeLeaveCredits).name).toBe("employee_leave_credits");
+    expect(getTableConfig(employeeLeaveCreditLogs).name).toBe("employee_leave_credit_logs");
+    expect(getTableConfig(leaveApplications).name).toBe("leave_applications");
+    expect(getTableConfig(leaveApplicationDetails).name).toBe("leave_application_details");
+    expect(getTableConfig(officialBusinessApplications).name).toBe(
+      "official_business_applications",
+    );
+    expect(getTableConfig(officialBusinessApplicationDetails).name).toBe(
+      "official_business_application_details",
+    );
+    expect(getTableConfig(correctionApplications).name).toBe("correction_applications");
+    expect(getTableConfig(correctionApplicationDetails).name).toBe(
+      "correction_application_details",
+    );
   });
 
   it("throws when createDb receives an empty connection string", () => {

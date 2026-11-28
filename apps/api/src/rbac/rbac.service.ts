@@ -142,6 +142,27 @@ const BASELINE_MENUS: Array<{
     parentCode: "online_applications",
     sortOrder: 62,
   },
+  {
+    code: "official_business_applications",
+    title: "Official Business / WFH",
+    path: "/applications/official-business",
+    parentCode: "online_applications",
+    sortOrder: 63,
+  },
+  {
+    code: "correction_applications",
+    title: "Attendance Corrections",
+    path: "/applications/corrections",
+    parentCode: "online_applications",
+    sortOrder: 64,
+  },
+  {
+    code: "leave_applications",
+    title: "Leave Management",
+    path: "/applications/leave",
+    parentCode: "online_applications",
+    sortOrder: 65,
+  },
 ];
 
 function isUniqueViolation(error: unknown): boolean {
@@ -269,6 +290,51 @@ export class RbacService {
           .values({
             roleId: employeeRole.id,
             menuId: overtimeMenu.id,
+            canView: true,
+            canCreate: true,
+            canUpdate: true,
+            canDelete: false,
+          })
+          .onConflictDoNothing({ target: [roleMenuAccess.roleId, roleMenuAccess.menuId] });
+      }
+
+      const leaveMenu = leafMenus.find((m) => m.code === "leave_applications");
+      if (leaveMenu) {
+        await this.db
+          .insert(roleMenuAccess)
+          .values({
+            roleId: employeeRole.id,
+            menuId: leaveMenu.id,
+            canView: true,
+            canCreate: true,
+            canUpdate: true,
+            canDelete: false,
+          })
+          .onConflictDoNothing({ target: [roleMenuAccess.roleId, roleMenuAccess.menuId] });
+      }
+
+      const obMenu = leafMenus.find((m) => m.code === "official_business_applications");
+      if (obMenu) {
+        await this.db
+          .insert(roleMenuAccess)
+          .values({
+            roleId: employeeRole.id,
+            menuId: obMenu.id,
+            canView: true,
+            canCreate: true,
+            canUpdate: true,
+            canDelete: false,
+          })
+          .onConflictDoNothing({ target: [roleMenuAccess.roleId, roleMenuAccess.menuId] });
+      }
+
+      const correctionMenu = leafMenus.find((m) => m.code === "correction_applications");
+      if (correctionMenu) {
+        await this.db
+          .insert(roleMenuAccess)
+          .values({
+            roleId: employeeRole.id,
+            menuId: correctionMenu.id,
             canView: true,
             canCreate: true,
             canUpdate: true,

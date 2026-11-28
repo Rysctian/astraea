@@ -8,10 +8,13 @@ import { AuthModule } from "./auth/auth.module.js";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter.js";
 import { ConfigModule, ENV } from "./config/config.module.js";
 import type { AppEnv } from "./config/env.js";
+import { CorrectionsModule } from "./corrections/corrections.module.js";
 import { CutOffsModule } from "./cut-offs/cut-offs.module.js";
 import { DatabaseModule } from "./database/database.module.js";
 import { EmployeesModule } from "./employees/employees.module.js";
 import { HealthModule } from "./health/health.module.js";
+import { LeaveModule } from "./leave/leave.module.js";
+import { OfficialBusinessModule } from "./official-business/official-business.module.js";
 import { OrganizationModule } from "./organization/organization.module.js";
 import { OvertimeModule } from "./overtime/overtime.module.js";
 import { RbacModule } from "./rbac/rbac.module.js";
@@ -36,8 +39,11 @@ import { UsersModule } from "./users/users.module.js";
     AuthModule,
     AttendanceModule,
     AttendancePoliciesModule,
+    CorrectionsModule,
     CutOffsModule,
     EmployeesModule,
+    LeaveModule,
+    OfficialBusinessModule,
     OrganizationModule,
     OvertimeModule,
     RbacModule,

@@ -47,6 +47,15 @@ function resolvePageTitle(pathname: string): string {
   if (pathname === "/applications/overtime") {
     return "Online Applications / Overtime Applications";
   }
+  if (pathname === "/applications/official-business") {
+    return "Online Applications / Official Business & WFH";
+  }
+  if (pathname === "/applications/corrections") {
+    return "Online Applications / Attendance Corrections";
+  }
+  if (pathname === "/applications/leave") {
+    return "Online Applications / Leave Management";
+  }
   return "Users";
 }
 

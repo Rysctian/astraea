@@ -6,10 +6,21 @@ import type {
   AttendancePolicyOptionsResponse,
   AttendancePolicyRecord,
   BatchAssignScheduleDto,
+  BulkAllocateCreditsResult,
+  BulkAllocateLeaveCreditsDto,
+  CorrectionApplicationRecord,
+  CorrectionFilingContext,
+  CorrectionLogPreviewResponse,
   CreateAttendancePolicyDto,
+  CreateCorrectionApplicationDto,
   CreateCutOffDto,
   CreateEmployeeDto,
+  CreateLeaveApplicationDto,
+  CreateLeavePolicyDto,
+  CreateLeaveTypeDto,
   CreateManualLogDto,
+  CreateOfficialBusinessApplicationDto,
+  CreateOfficialBusinessBatchResult,
   CreateOvertimeApplicationDto,
   CreateOvertimeBatchResult,
   CreateReferenceItemDto,
@@ -24,16 +35,28 @@ import type {
   DtrQuery,
   DtrResponse,
   Employee,
+  EmployeeLeaveCreditRecord,
   EmployeeScheduleRecord,
   EmployeeSupervisorSummary,
   ImportLogsResult,
   ImportLogsRowError,
+  LeaveApplicationRecord,
+  LeaveCreditLogRecord,
+  LeaveFilingOptionsResponse,
+  LeavePolicyRecord,
+  LeaveTypeRecord,
   ListApproverWorkflowsQuery,
   ListAttendanceLogsQuery,
   ListAttendancePoliciesQuery,
+  ListCorrectionApplicationsQuery,
   ListCutOffsQuery,
   ListEmployeeSchedulesQuery,
   ListEmployeesQuery,
+  ListLeaveApplicationsQuery,
+  ListLeaveCreditsQuery,
+  ListLeavePoliciesQuery,
+  ListLeaveTypesQuery,
+  ListOfficialBusinessApplicationsQuery,
   ListOrgQuery,
   ListOvertimeApplicationsQuery,
   ListReferenceItemsQuery,
@@ -43,6 +66,8 @@ import type {
   LoginDto,
   ManualLogResult,
   MenuCatalogGroup,
+  OfficialBusinessApplicationRecord,
+  OfficialBusinessFilingContext,
   OrgActiveOptions,
   OrgEntityType,
   OrgHierarchyTree,
@@ -66,9 +91,12 @@ import type {
   UpdateCutOffDto,
   UpdateEmployeeDto,
   UpdateEmployeeScheduleDto,
+  UpdateLeavePolicyDto,
+  UpdateLeaveTypeDto,
   UpdateReferenceItemDto,
   UpdateRoleDto,
   UpdateScheduleDto,
+  UpsertLeaveCreditDto,
   User,
 } from "@starter/shared";
 import { webEnv } from "@/env";
@@ -422,6 +450,173 @@ export const api = {
     }),
   cancelOvertimeApplication: (id: number, data: DecisionRemarksDto = {}) =>
     request<OvertimeApplicationRecord>(`/overtime/${id}/cancel`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  // Leave Management (Module 15)
+  getLeaveFilingOptions: () => request<LeaveFilingOptionsResponse>("/leave/options"),
+  getMyLeaveCredits: (year?: number) =>
+    request<EmployeeLeaveCreditRecord[]>(`/leave/credits/my${toQueryString({ year })}`),
+
+  listLeavePolicies: (query: Partial<ListLeavePoliciesQuery> = {}) =>
+    request<PaginatedResponse<LeavePolicyRecord>>(`/leave/policies${toQueryString(query)}`),
+  createLeavePolicy: (data: CreateLeavePolicyDto) =>
+    request<LeavePolicyRecord>("/leave/policies", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateLeavePolicy: (id: number, data: UpdateLeavePolicyDto) =>
+    request<LeavePolicyRecord>(`/leave/policies/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteLeavePolicy: (id: number) =>
+    request<void>(`/leave/policies/${id}`, {
+      method: "DELETE",
+    }),
+
+  listLeaveTypes: (query: Partial<ListLeaveTypesQuery> = {}) =>
+    request<PaginatedResponse<LeaveTypeRecord>>(`/leave/types${toQueryString(query)}`),
+  createLeaveType: (data: CreateLeaveTypeDto) =>
+    request<LeaveTypeRecord>("/leave/types", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateLeaveType: (id: number, data: UpdateLeaveTypeDto) =>
+    request<LeaveTypeRecord>(`/leave/types/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteLeaveType: (id: number) =>
+    request<void>(`/leave/types/${id}`, {
+      method: "DELETE",
+    }),
+
+  listLeaveCredits: (query: Partial<ListLeaveCreditsQuery> = {}) =>
+    request<PaginatedResponse<EmployeeLeaveCreditRecord>>(`/leave/credits${toQueryString(query)}`),
+  upsertLeaveCredit: (data: UpsertLeaveCreditDto) =>
+    request<EmployeeLeaveCreditRecord>("/leave/credits", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  bulkAllocateLeaveCredits: (data: BulkAllocateLeaveCreditsDto) =>
+    request<BulkAllocateCreditsResult>("/leave/credits/bulk", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  getLeaveCreditLogs: (creditId: number) =>
+    request<LeaveCreditLogRecord[]>(`/leave/credits/${creditId}/logs`),
+
+  listLeaveApplications: (query: Partial<ListLeaveApplicationsQuery> = {}) =>
+    request<PaginatedResponse<LeaveApplicationRecord>>(
+      `/leave/applications${toQueryString(query)}`,
+    ),
+  getLeaveApplication: (id: number) => request<LeaveApplicationRecord>(`/leave/applications/${id}`),
+  getLeaveAttachmentUrl: (id: number) =>
+    `${webEnv.VITE_API_URL}/leave/applications/${id}/attachment`,
+  createLeaveApplication: async (
+    payload: CreateLeaveApplicationDto,
+    file?: File | null,
+  ): Promise<LeaveApplicationRecord> => {
+    if (!file) {
+      return request<LeaveApplicationRecord>("/leave/applications", {
+        method: "POST",
+        body: JSON.stringify(payload),
+      });
+    }
+    const formData = new FormData();
+    formData.append("payload", JSON.stringify(payload));
+    formData.append("file", file);
+    const res = await fetch(`${webEnv.VITE_API_URL}/leave/applications`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+    if (!res.ok) {
+      const body = (await res.json().catch(() => null)) as {
+        message?: string | string[];
+        code?: string;
+        applicationType?: ApplicationType;
+      } | null;
+      const message = Array.isArray(body?.message)
+        ? body.message.join(", ")
+        : (body?.message ?? `Request failed with status ${res.status}`);
+      throw new ApiError(message, res.status, undefined, body?.code, body?.applicationType);
+    }
+    return (await res.json()) as LeaveApplicationRecord;
+  },
+  approveLeaveApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<LeaveApplicationRecord>(`/leave/applications/${id}/approve`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  disapproveLeaveApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<LeaveApplicationRecord>(`/leave/applications/${id}/disapprove`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  cancelLeaveApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<LeaveApplicationRecord>(`/leave/applications/${id}/cancel`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  // Official Business & WFH (Module 13)
+  getOfficialBusinessContext: () =>
+    request<OfficialBusinessFilingContext>("/official-business/context"),
+  listOfficialBusinessApplications: (query: Partial<ListOfficialBusinessApplicationsQuery> = {}) =>
+    request<PaginatedResponse<OfficialBusinessApplicationRecord>>(
+      `/official-business${toQueryString(query)}`,
+    ),
+  getOfficialBusinessApplication: (id: number) =>
+    request<OfficialBusinessApplicationRecord>(`/official-business/${id}`),
+  createOfficialBusinessApplications: (data: CreateOfficialBusinessApplicationDto) =>
+    request<CreateOfficialBusinessBatchResult>("/official-business", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  approveOfficialBusinessApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<OfficialBusinessApplicationRecord>(`/official-business/${id}/approve`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  disapproveOfficialBusinessApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<OfficialBusinessApplicationRecord>(`/official-business/${id}/disapprove`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  cancelOfficialBusinessApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<OfficialBusinessApplicationRecord>(`/official-business/${id}/cancel`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  // Attendance Corrections (Module 14)
+  getCorrectionContext: () => request<CorrectionFilingContext>("/corrections/context"),
+  previewCorrectionLogs: (params: { employeeId?: string; date: string }) =>
+    request<CorrectionLogPreviewResponse>(`/corrections/preview${toQueryString(params)}`),
+  listCorrectionApplications: (query: Partial<ListCorrectionApplicationsQuery> = {}) =>
+    request<PaginatedResponse<CorrectionApplicationRecord>>(`/corrections${toQueryString(query)}`),
+  getCorrectionApplication: (id: number) =>
+    request<CorrectionApplicationRecord>(`/corrections/${id}`),
+  createCorrectionApplication: (data: CreateCorrectionApplicationDto) =>
+    request<CorrectionApplicationRecord>("/corrections", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  approveCorrectionApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<CorrectionApplicationRecord>(`/corrections/${id}/approve`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  disapproveCorrectionApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<CorrectionApplicationRecord>(`/corrections/${id}/disapprove`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  cancelCorrectionApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<CorrectionApplicationRecord>(`/corrections/${id}/cancel`, {
       method: "POST",
       body: JSON.stringify(data),
     }),

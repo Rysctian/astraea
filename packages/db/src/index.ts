@@ -2,9 +2,22 @@ export { createDb, type Database } from "./client.js";
 export { applicationApprovals, approverSetups } from "./schema/approvals.js";
 export { employeeAttendance, employeeAttendanceLogs, employeeLogs } from "./schema/attendance.js";
 export { attendancePolicies } from "./schema/attendance-policies.js";
+export { correctionApplicationDetails, correctionApplications } from "./schema/corrections.js";
 export { cutOffPeriods, cutOffs } from "./schema/cut-offs.js";
 export { employeeIdSequences, employees } from "./schema/employees.js";
 export * as schema from "./schema/index.js";
+export {
+  employeeLeaveCreditLogs,
+  employeeLeaveCredits,
+  leaveApplicationDetails,
+  leaveApplications,
+  leavePolicies,
+  leaveTypes,
+} from "./schema/leave.js";
+export {
+  officialBusinessApplicationDetails,
+  officialBusinessApplications,
+} from "./schema/official-business.js";
 export {
   departments,
   divisions,

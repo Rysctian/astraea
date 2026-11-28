@@ -14,6 +14,9 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected.index'
 import { Route as ProtectedOrganizationRouteImport } from './routes/_protected.organization'
 import { Route as ProtectedApplicationsApproverSetupRouteImport } from './routes/_protected.applications.approver-setup'
+import { Route as ProtectedApplicationsCorrectionsRouteImport } from './routes/_protected.applications.corrections'
+import { Route as ProtectedApplicationsLeaveRouteImport } from './routes/_protected.applications.leave'
+import { Route as ProtectedApplicationsOfficialBusinessRouteImport } from './routes/_protected.applications.official-business'
 import { Route as ProtectedApplicationsOvertimeRouteImport } from './routes/_protected.applications.overtime'
 import { Route as ProtectedAttendanceIndexRouteImport } from './routes/_protected.attendance.index'
 import { Route as ProtectedAttendanceCutOffsRouteImport } from './routes/_protected.attendance.cut-offs'
@@ -48,6 +51,24 @@ const ProtectedApplicationsApproverSetupRoute =
   ProtectedApplicationsApproverSetupRouteImport.update({
     id: '/applications/approver-setup',
     path: '/applications/approver-setup',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedApplicationsCorrectionsRoute =
+  ProtectedApplicationsCorrectionsRouteImport.update({
+    id: '/applications/corrections',
+    path: '/applications/corrections',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedApplicationsLeaveRoute =
+  ProtectedApplicationsLeaveRouteImport.update({
+    id: '/applications/leave',
+    path: '/applications/leave',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedApplicationsOfficialBusinessRoute =
+  ProtectedApplicationsOfficialBusinessRouteImport.update({
+    id: '/applications/official-business',
+    path: '/applications/official-business',
     getParentRoute: () => ProtectedRoute,
   } as any)
 const ProtectedApplicationsOvertimeRoute =
@@ -115,6 +136,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/organization': typeof ProtectedOrganizationRoute
   '/applications/approver-setup': typeof ProtectedApplicationsApproverSetupRoute
+  '/applications/corrections': typeof ProtectedApplicationsCorrectionsRoute
+  '/applications/leave': typeof ProtectedApplicationsLeaveRoute
+  '/applications/official-business': typeof ProtectedApplicationsOfficialBusinessRoute
   '/applications/overtime': typeof ProtectedApplicationsOvertimeRoute
   '/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
   '/attendance/policies': typeof ProtectedAttendancePoliciesRoute
@@ -131,6 +155,9 @@ export interface FileRoutesByTo {
   '/organization': typeof ProtectedOrganizationRoute
   '/': typeof ProtectedIndexRoute
   '/applications/approver-setup': typeof ProtectedApplicationsApproverSetupRoute
+  '/applications/corrections': typeof ProtectedApplicationsCorrectionsRoute
+  '/applications/leave': typeof ProtectedApplicationsLeaveRoute
+  '/applications/official-business': typeof ProtectedApplicationsOfficialBusinessRoute
   '/applications/overtime': typeof ProtectedApplicationsOvertimeRoute
   '/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
   '/attendance/policies': typeof ProtectedAttendancePoliciesRoute
@@ -149,6 +176,9 @@ export interface FileRoutesById {
   '/_protected/organization': typeof ProtectedOrganizationRoute
   '/_protected/': typeof ProtectedIndexRoute
   '/_protected/applications/approver-setup': typeof ProtectedApplicationsApproverSetupRoute
+  '/_protected/applications/corrections': typeof ProtectedApplicationsCorrectionsRoute
+  '/_protected/applications/leave': typeof ProtectedApplicationsLeaveRoute
+  '/_protected/applications/official-business': typeof ProtectedApplicationsOfficialBusinessRoute
   '/_protected/applications/overtime': typeof ProtectedApplicationsOvertimeRoute
   '/_protected/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
   '/_protected/attendance/policies': typeof ProtectedAttendancePoliciesRoute
@@ -167,6 +197,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/organization'
     | '/applications/approver-setup'
+    | '/applications/corrections'
+    | '/applications/leave'
+    | '/applications/official-business'
     | '/applications/overtime'
     | '/attendance/cut-offs'
     | '/attendance/policies'
@@ -183,6 +216,9 @@ export interface FileRouteTypes {
     | '/organization'
     | '/'
     | '/applications/approver-setup'
+    | '/applications/corrections'
+    | '/applications/leave'
+    | '/applications/official-business'
     | '/applications/overtime'
     | '/attendance/cut-offs'
     | '/attendance/policies'
@@ -200,6 +236,9 @@ export interface FileRouteTypes {
     | '/_protected/organization'
     | '/_protected/'
     | '/_protected/applications/approver-setup'
+    | '/_protected/applications/corrections'
+    | '/_protected/applications/leave'
+    | '/_protected/applications/official-business'
     | '/_protected/applications/overtime'
     | '/_protected/attendance/cut-offs'
     | '/_protected/attendance/policies'
@@ -252,6 +291,27 @@ declare module '@tanstack/react-router' {
       path: '/applications/approver-setup'
       fullPath: '/applications/approver-setup'
       preLoaderRoute: typeof ProtectedApplicationsApproverSetupRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/applications/corrections': {
+      id: '/_protected/applications/corrections'
+      path: '/applications/corrections'
+      fullPath: '/applications/corrections'
+      preLoaderRoute: typeof ProtectedApplicationsCorrectionsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/applications/leave': {
+      id: '/_protected/applications/leave'
+      path: '/applications/leave'
+      fullPath: '/applications/leave'
+      preLoaderRoute: typeof ProtectedApplicationsLeaveRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/applications/official-business': {
+      id: '/_protected/applications/official-business'
+      path: '/applications/official-business'
+      fullPath: '/applications/official-business'
+      preLoaderRoute: typeof ProtectedApplicationsOfficialBusinessRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/applications/overtime': {
@@ -331,6 +391,9 @@ interface ProtectedRouteChildren {
   ProtectedOrganizationRoute: typeof ProtectedOrganizationRoute
   ProtectedIndexRoute: typeof ProtectedIndexRoute
   ProtectedApplicationsApproverSetupRoute: typeof ProtectedApplicationsApproverSetupRoute
+  ProtectedApplicationsCorrectionsRoute: typeof ProtectedApplicationsCorrectionsRoute
+  ProtectedApplicationsLeaveRoute: typeof ProtectedApplicationsLeaveRoute
+  ProtectedApplicationsOfficialBusinessRoute: typeof ProtectedApplicationsOfficialBusinessRoute
   ProtectedApplicationsOvertimeRoute: typeof ProtectedApplicationsOvertimeRoute
   ProtectedAttendanceCutOffsRoute: typeof ProtectedAttendanceCutOffsRoute
   ProtectedAttendancePoliciesRoute: typeof ProtectedAttendancePoliciesRoute
@@ -348,6 +411,10 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedIndexRoute: ProtectedIndexRoute,
   ProtectedApplicationsApproverSetupRoute:
     ProtectedApplicationsApproverSetupRoute,
+  ProtectedApplicationsCorrectionsRoute: ProtectedApplicationsCorrectionsRoute,
+  ProtectedApplicationsLeaveRoute: ProtectedApplicationsLeaveRoute,
+  ProtectedApplicationsOfficialBusinessRoute:
+    ProtectedApplicationsOfficialBusinessRoute,
   ProtectedApplicationsOvertimeRoute: ProtectedApplicationsOvertimeRoute,
   ProtectedAttendanceCutOffsRoute: ProtectedAttendanceCutOffsRoute,
   ProtectedAttendancePoliciesRoute: ProtectedAttendancePoliciesRoute,

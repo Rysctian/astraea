@@ -70,7 +70,10 @@ type AppRoutePath =
   | "/attendance/schedules"
   | "/attendance/cut-offs"
   | "/applications/approver-setup"
-  | "/applications/overtime";
+  | "/applications/overtime"
+  | "/applications/official-business"
+  | "/applications/corrections"
+  | "/applications/leave";
 
 interface NavChild {
   label: string;
@@ -139,6 +142,9 @@ const HRIS_MODULES: readonly NavItem[] = [
     children: [
       { label: "Approver Setup", to: "/applications/approver-setup" },
       { label: "Overtime Applications", to: "/applications/overtime" },
+      { label: "Official Business / WFH", to: "/applications/official-business" },
+      { label: "Attendance Corrections", to: "/applications/corrections" },
+      { label: "Leave Management", to: "/applications/leave" },
     ],
   },
   {
