@@ -41,6 +41,12 @@ function resolvePageTitle(pathname: string): string {
   if (pathname === "/attendance/cut-offs") {
     return "Attendance / Cut-Off Management";
   }
+  if (pathname === "/applications/approver-setup") {
+    return "Online Applications / Approver Setup";
+  }
+  if (pathname === "/applications/overtime") {
+    return "Online Applications / Overtime Applications";
+  }
   return "Users";
 }
 

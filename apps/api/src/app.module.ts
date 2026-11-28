@@ -1,6 +1,7 @@
 import { Module, StandardSchemaValidationPipe } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { LoggerModule } from "nestjs-pino";
+import { ApprovalsModule } from "./approvals/approvals.module.js";
 import { AttendanceModule } from "./attendance/attendance.module.js";
 import { AttendancePoliciesModule } from "./attendance-policies/attendance-policies.module.js";
 import { AuthModule } from "./auth/auth.module.js";
@@ -12,6 +13,7 @@ import { DatabaseModule } from "./database/database.module.js";
 import { EmployeesModule } from "./employees/employees.module.js";
 import { HealthModule } from "./health/health.module.js";
 import { OrganizationModule } from "./organization/organization.module.js";
+import { OvertimeModule } from "./overtime/overtime.module.js";
 import { RbacModule } from "./rbac/rbac.module.js";
 import { ReferenceSetupModule } from "./reference-setup/reference-setup.module.js";
 import { SchedulesModule } from "./schedules/schedules.module.js";
@@ -30,12 +32,14 @@ import { UsersModule } from "./users/users.module.js";
       }),
     }),
     DatabaseModule,
+    ApprovalsModule,
     AuthModule,
     AttendanceModule,
     AttendancePoliciesModule,
     CutOffsModule,
     EmployeesModule,
     OrganizationModule,
+    OvertimeModule,
     RbacModule,
     ReferenceSetupModule,
     SchedulesModule,

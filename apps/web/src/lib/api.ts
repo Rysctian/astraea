@@ -1,4 +1,6 @@
 import type {
+  ApplicationType,
+  ApproverWorkflowGroupRecord,
   AssignUserRoleDto,
   AttendanceLogRecord,
   AttendancePolicyOptionsResponse,
@@ -8,6 +10,8 @@ import type {
   CreateCutOffDto,
   CreateEmployeeDto,
   CreateManualLogDto,
+  CreateOvertimeApplicationDto,
+  CreateOvertimeBatchResult,
   CreateReferenceItemDto,
   CreateRoleDto,
   CreateScheduleDto,
@@ -16,6 +20,7 @@ import type {
   CutOffPresetItem,
   CutOffRecord,
   CutOffScheduleType,
+  DecisionRemarksDto,
   DtrQuery,
   DtrResponse,
   Employee,
@@ -23,12 +28,14 @@ import type {
   EmployeeSupervisorSummary,
   ImportLogsResult,
   ImportLogsRowError,
+  ListApproverWorkflowsQuery,
   ListAttendanceLogsQuery,
   ListAttendancePoliciesQuery,
   ListCutOffsQuery,
   ListEmployeeSchedulesQuery,
   ListEmployeesQuery,
   ListOrgQuery,
+  ListOvertimeApplicationsQuery,
   ListReferenceItemsQuery,
   ListRolesQuery,
   ListSchedulesQuery,
@@ -41,6 +48,7 @@ import type {
   OrgHierarchyTree,
   OrgRecord,
   OrgSummaryCounts,
+  OvertimeApplicationRecord,
   PaginatedResponse,
   ReferenceActiveOptionsMap,
   ReferenceCategorySummary,
@@ -51,6 +59,8 @@ import type {
   RoleDetailRecord,
   RoleOptionItem,
   RoleRecord,
+  SaveApproverWorkflowDto,
+  SaveApproverWorkflowResult,
   ScheduleRecord,
   UpdateAttendancePolicyDto,
   UpdateCutOffDto,
@@ -88,6 +98,8 @@ export class ApiError extends Error {
     message: string,
     public readonly status: number,
     public readonly rowErrors?: ImportLogsRowError[],
+    public readonly code?: string,
+    public readonly applicationType?: ApplicationType,
   ) {
     super(message);
     this.name = "ApiError";
@@ -118,11 +130,15 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   if (!res.ok) {
-    const body = (await res.json().catch(() => null)) as { message?: string | string[] } | null;
+    const body = (await res.json().catch(() => null)) as {
+      message?: string | string[];
+      code?: string;
+      applicationType?: ApplicationType;
+    } | null;
     const message = Array.isArray(body?.message)
       ? body.message.join(", ")
       : (body?.message ?? `Request failed with status ${res.status}`);
-    throw new ApiError(message, res.status);
+    throw new ApiError(message, res.status, undefined, body?.code, body?.applicationType);
   }
 
   if (res.status === 204) {
@@ -365,4 +381,48 @@ export const api = {
     }
     return (await res.json()) as ImportLogsResult;
   },
+
+  // Approver Setup (Module 11)
+  listApproverWorkflows: (query: Partial<ListApproverWorkflowsQuery> = {}) =>
+    request<PaginatedResponse<ApproverWorkflowGroupRecord>>(
+      `/approver-setup${toQueryString(query)}`,
+    ),
+  getApproverWorkflow: (employeeId: string, applicationType: ApplicationType) =>
+    request<ApproverWorkflowGroupRecord>(
+      `/approver-setup/${encodeURIComponent(employeeId)}/${applicationType}`,
+    ),
+  saveApproverWorkflows: (data: SaveApproverWorkflowDto) =>
+    request<SaveApproverWorkflowResult>("/approver-setup", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  deleteApproverWorkflow: (employeeId: string, applicationType: ApplicationType) =>
+    request<void>(`/approver-setup/${encodeURIComponent(employeeId)}/${applicationType}`, {
+      method: "DELETE",
+    }),
+
+  // Overtime Applications (Module 12)
+  listOvertimeApplications: (query: Partial<ListOvertimeApplicationsQuery> = {}) =>
+    request<PaginatedResponse<OvertimeApplicationRecord>>(`/overtime${toQueryString(query)}`),
+  getOvertimeApplication: (id: number) => request<OvertimeApplicationRecord>(`/overtime/${id}`),
+  createOvertimeApplications: (data: CreateOvertimeApplicationDto) =>
+    request<CreateOvertimeBatchResult>("/overtime", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  approveOvertimeApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<OvertimeApplicationRecord>(`/overtime/${id}/approve`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  disapproveOvertimeApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<OvertimeApplicationRecord>(`/overtime/${id}/disapprove`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  cancelOvertimeApplication: (id: number, data: DecisionRemarksDto = {}) =>
+    request<OvertimeApplicationRecord>(`/overtime/${id}/cancel`, {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 };

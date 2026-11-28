@@ -5,6 +5,7 @@ import {
   Building2,
   ChevronDown,
   ChevronRight,
+  ClipboardCheck,
   Clock,
   FileText,
   FolderKanban,
@@ -67,7 +68,9 @@ type AppRoutePath =
   | "/attendance"
   | "/attendance/policies"
   | "/attendance/schedules"
-  | "/attendance/cut-offs";
+  | "/attendance/cut-offs"
+  | "/applications/approver-setup"
+  | "/applications/overtime";
 
 interface NavChild {
   label: string;
@@ -129,6 +132,16 @@ const HRIS_MODULES: readonly NavItem[] = [
     ],
   },
   {
+    id: "online-applications",
+    label: "Online Applications",
+    icon: ClipboardCheck,
+    matchPrefix: "/applications",
+    children: [
+      { label: "Approver Setup", to: "/applications/approver-setup" },
+      { label: "Overtime Applications", to: "/applications/overtime" },
+    ],
+  },
+  {
     id: "payroll",
     label: "Payroll",
     icon: Wallet,
@@ -146,6 +159,9 @@ function getInitialExpandedId(currentPath: string): string | null {
   }
   if (currentPath.startsWith("/attendance")) {
     return "attendance";
+  }
+  if (currentPath.startsWith("/applications")) {
+    return "online-applications";
   }
   return null;
 }
