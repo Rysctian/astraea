@@ -64,6 +64,7 @@ type AppRoutePath =
   | "/setup/employee-info"
   | "/setup/employment"
   | "/setup/administrative"
+  | "/attendance"
   | "/attendance/policies"
   | "/attendance/schedules"
   | "/attendance/cut-offs";
@@ -121,6 +122,7 @@ const HRIS_MODULES: readonly NavItem[] = [
     icon: Clock,
     matchPrefix: "/attendance",
     children: [
+      { label: "Attendance & Logs", to: "/attendance" },
       { label: "Attendance Policies", to: "/attendance/policies" },
       { label: "Schedule Management", to: "/attendance/schedules" },
       { label: "Cut-Off Management", to: "/attendance/cut-offs" },
@@ -248,8 +250,8 @@ function AppShellInner({
                           <ul className="ml-4 mt-1 flex flex-col gap-0.5 border-l border-sidebar-border/80 pl-2.5 pb-1">
                             {mod.children.map((child) => {
                               const childActive =
-                                child.to === "/"
-                                  ? currentPath === "/"
+                                child.to === "/" || child.to === "/attendance"
+                                  ? currentPath === child.to
                                   : currentPath.startsWith(child.to);
                               return (
                                 <li key={child.label} className="list-none">

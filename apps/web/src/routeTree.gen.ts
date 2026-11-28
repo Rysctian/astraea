@@ -13,6 +13,9 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProtectedIndexRouteImport } from './routes/_protected.index'
 import { Route as ProtectedOrganizationRouteImport } from './routes/_protected.organization'
+import { Route as ProtectedApplicationsApproverSetupRouteImport } from './routes/_protected.applications.approver-setup'
+import { Route as ProtectedApplicationsOvertimeRouteImport } from './routes/_protected.applications.overtime'
+import { Route as ProtectedAttendanceIndexRouteImport } from './routes/_protected.attendance.index'
 import { Route as ProtectedAttendanceCutOffsRouteImport } from './routes/_protected.attendance.cut-offs'
 import { Route as ProtectedAttendancePoliciesRouteImport } from './routes/_protected.attendance.policies'
 import { Route as ProtectedAttendanceSchedulesRouteImport } from './routes/_protected.attendance.schedules'
@@ -41,6 +44,24 @@ const ProtectedOrganizationRoute = ProtectedOrganizationRouteImport.update({
   path: '/organization',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedApplicationsApproverSetupRoute =
+  ProtectedApplicationsApproverSetupRouteImport.update({
+    id: '/applications/approver-setup',
+    path: '/applications/approver-setup',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedApplicationsOvertimeRoute =
+  ProtectedApplicationsOvertimeRouteImport.update({
+    id: '/applications/overtime',
+    path: '/applications/overtime',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAttendanceIndexRoute =
+  ProtectedAttendanceIndexRouteImport.update({
+    id: '/attendance/',
+    path: '/attendance/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedAttendanceCutOffsRoute =
   ProtectedAttendanceCutOffsRouteImport.update({
     id: '/attendance/cut-offs',
@@ -93,6 +114,8 @@ export interface FileRoutesByFullPath {
   '/': typeof ProtectedIndexRoute
   '/login': typeof LoginRoute
   '/organization': typeof ProtectedOrganizationRoute
+  '/applications/approver-setup': typeof ProtectedApplicationsApproverSetupRoute
+  '/applications/overtime': typeof ProtectedApplicationsOvertimeRoute
   '/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
   '/attendance/policies': typeof ProtectedAttendancePoliciesRoute
   '/attendance/schedules': typeof ProtectedAttendanceSchedulesRoute
@@ -100,12 +123,15 @@ export interface FileRoutesByFullPath {
   '/setup/administrative': typeof ProtectedSetupAdministrativeRoute
   '/setup/employee-info': typeof ProtectedSetupEmployeeInfoRoute
   '/setup/employment': typeof ProtectedSetupEmploymentRoute
+  '/attendance/': typeof ProtectedAttendanceIndexRoute
   '/employees/': typeof ProtectedEmployeesIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/organization': typeof ProtectedOrganizationRoute
   '/': typeof ProtectedIndexRoute
+  '/applications/approver-setup': typeof ProtectedApplicationsApproverSetupRoute
+  '/applications/overtime': typeof ProtectedApplicationsOvertimeRoute
   '/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
   '/attendance/policies': typeof ProtectedAttendancePoliciesRoute
   '/attendance/schedules': typeof ProtectedAttendanceSchedulesRoute
@@ -113,6 +139,7 @@ export interface FileRoutesByTo {
   '/setup/administrative': typeof ProtectedSetupAdministrativeRoute
   '/setup/employee-info': typeof ProtectedSetupEmployeeInfoRoute
   '/setup/employment': typeof ProtectedSetupEmploymentRoute
+  '/attendance': typeof ProtectedAttendanceIndexRoute
   '/employees': typeof ProtectedEmployeesIndexRoute
 }
 export interface FileRoutesById {
@@ -121,6 +148,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_protected/organization': typeof ProtectedOrganizationRoute
   '/_protected/': typeof ProtectedIndexRoute
+  '/_protected/applications/approver-setup': typeof ProtectedApplicationsApproverSetupRoute
+  '/_protected/applications/overtime': typeof ProtectedApplicationsOvertimeRoute
   '/_protected/attendance/cut-offs': typeof ProtectedAttendanceCutOffsRoute
   '/_protected/attendance/policies': typeof ProtectedAttendancePoliciesRoute
   '/_protected/attendance/schedules': typeof ProtectedAttendanceSchedulesRoute
@@ -128,6 +157,7 @@ export interface FileRoutesById {
   '/_protected/setup/administrative': typeof ProtectedSetupAdministrativeRoute
   '/_protected/setup/employee-info': typeof ProtectedSetupEmployeeInfoRoute
   '/_protected/setup/employment': typeof ProtectedSetupEmploymentRoute
+  '/_protected/attendance/': typeof ProtectedAttendanceIndexRoute
   '/_protected/employees/': typeof ProtectedEmployeesIndexRoute
 }
 export interface FileRouteTypes {
@@ -136,6 +166,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/organization'
+    | '/applications/approver-setup'
+    | '/applications/overtime'
     | '/attendance/cut-offs'
     | '/attendance/policies'
     | '/attendance/schedules'
@@ -143,12 +175,15 @@ export interface FileRouteTypes {
     | '/setup/administrative'
     | '/setup/employee-info'
     | '/setup/employment'
+    | '/attendance/'
     | '/employees/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/organization'
     | '/'
+    | '/applications/approver-setup'
+    | '/applications/overtime'
     | '/attendance/cut-offs'
     | '/attendance/policies'
     | '/attendance/schedules'
@@ -156,6 +191,7 @@ export interface FileRouteTypes {
     | '/setup/administrative'
     | '/setup/employee-info'
     | '/setup/employment'
+    | '/attendance'
     | '/employees'
   id:
     | '__root__'
@@ -163,6 +199,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/_protected/organization'
     | '/_protected/'
+    | '/_protected/applications/approver-setup'
+    | '/_protected/applications/overtime'
     | '/_protected/attendance/cut-offs'
     | '/_protected/attendance/policies'
     | '/_protected/attendance/schedules'
@@ -170,6 +208,7 @@ export interface FileRouteTypes {
     | '/_protected/setup/administrative'
     | '/_protected/setup/employee-info'
     | '/_protected/setup/employment'
+    | '/_protected/attendance/'
     | '/_protected/employees/'
   fileRoutesById: FileRoutesById
 }
@@ -206,6 +245,27 @@ declare module '@tanstack/react-router' {
       path: '/organization'
       fullPath: '/organization'
       preLoaderRoute: typeof ProtectedOrganizationRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/applications/approver-setup': {
+      id: '/_protected/applications/approver-setup'
+      path: '/applications/approver-setup'
+      fullPath: '/applications/approver-setup'
+      preLoaderRoute: typeof ProtectedApplicationsApproverSetupRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/applications/overtime': {
+      id: '/_protected/applications/overtime'
+      path: '/applications/overtime'
+      fullPath: '/applications/overtime'
+      preLoaderRoute: typeof ProtectedApplicationsOvertimeRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/attendance/': {
+      id: '/_protected/attendance/'
+      path: '/attendance'
+      fullPath: '/attendance/'
+      preLoaderRoute: typeof ProtectedAttendanceIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/attendance/cut-offs': {
@@ -270,6 +330,8 @@ declare module '@tanstack/react-router' {
 interface ProtectedRouteChildren {
   ProtectedOrganizationRoute: typeof ProtectedOrganizationRoute
   ProtectedIndexRoute: typeof ProtectedIndexRoute
+  ProtectedApplicationsApproverSetupRoute: typeof ProtectedApplicationsApproverSetupRoute
+  ProtectedApplicationsOvertimeRoute: typeof ProtectedApplicationsOvertimeRoute
   ProtectedAttendanceCutOffsRoute: typeof ProtectedAttendanceCutOffsRoute
   ProtectedAttendancePoliciesRoute: typeof ProtectedAttendancePoliciesRoute
   ProtectedAttendanceSchedulesRoute: typeof ProtectedAttendanceSchedulesRoute
@@ -277,12 +339,16 @@ interface ProtectedRouteChildren {
   ProtectedSetupAdministrativeRoute: typeof ProtectedSetupAdministrativeRoute
   ProtectedSetupEmployeeInfoRoute: typeof ProtectedSetupEmployeeInfoRoute
   ProtectedSetupEmploymentRoute: typeof ProtectedSetupEmploymentRoute
+  ProtectedAttendanceIndexRoute: typeof ProtectedAttendanceIndexRoute
   ProtectedEmployeesIndexRoute: typeof ProtectedEmployeesIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedOrganizationRoute: ProtectedOrganizationRoute,
   ProtectedIndexRoute: ProtectedIndexRoute,
+  ProtectedApplicationsApproverSetupRoute:
+    ProtectedApplicationsApproverSetupRoute,
+  ProtectedApplicationsOvertimeRoute: ProtectedApplicationsOvertimeRoute,
   ProtectedAttendanceCutOffsRoute: ProtectedAttendanceCutOffsRoute,
   ProtectedAttendancePoliciesRoute: ProtectedAttendancePoliciesRoute,
   ProtectedAttendanceSchedulesRoute: ProtectedAttendanceSchedulesRoute,
@@ -290,6 +356,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedSetupAdministrativeRoute: ProtectedSetupAdministrativeRoute,
   ProtectedSetupEmployeeInfoRoute: ProtectedSetupEmployeeInfoRoute,
   ProtectedSetupEmploymentRoute: ProtectedSetupEmploymentRoute,
+  ProtectedAttendanceIndexRoute: ProtectedAttendanceIndexRoute,
   ProtectedEmployeesIndexRoute: ProtectedEmployeesIndexRoute,
 }
 

@@ -29,6 +29,9 @@ function resolvePageTitle(pathname: string): string {
   if (pathname === "/setup/administrative") {
     return "Reference Setup / Administrative";
   }
+  if (pathname === "/attendance") {
+    return "Attendance & Logs";
+  }
   if (pathname === "/attendance/policies") {
     return "Attendance / Policies";
   }

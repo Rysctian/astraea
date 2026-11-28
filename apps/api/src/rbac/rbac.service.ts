@@ -94,6 +94,13 @@ const BASELINE_MENUS: Array<{
   { code: "user_management", title: "User Management", path: "/", parentCode: null, sortOrder: 40 },
   { code: "attendance", title: "Attendance", path: null, parentCode: null, sortOrder: 50 },
   {
+    code: "attendance_logs",
+    title: "Attendance & Logs",
+    path: "/attendance",
+    parentCode: "attendance",
+    sortOrder: 50,
+  },
+  {
     code: "attendance_policies",
     title: "Attendance Policies",
     path: "/attendance/policies",
@@ -113,6 +120,27 @@ const BASELINE_MENUS: Array<{
     path: "/attendance/cut-offs",
     parentCode: "attendance",
     sortOrder: 53,
+  },
+  {
+    code: "online_applications",
+    title: "Online Applications",
+    path: null,
+    parentCode: null,
+    sortOrder: 60,
+  },
+  {
+    code: "approver_setup",
+    title: "Approver Setup",
+    path: "/applications/approver-setup",
+    parentCode: "online_applications",
+    sortOrder: 61,
+  },
+  {
+    code: "overtime_applications",
+    title: "Overtime Applications",
+    path: "/applications/overtime",
+    parentCode: "online_applications",
+    sortOrder: 62,
   },
 ];
 
@@ -229,6 +257,21 @@ export class RbacService {
             canView: true,
             canCreate: false,
             canUpdate: false,
+            canDelete: false,
+          })
+          .onConflictDoNothing({ target: [roleMenuAccess.roleId, roleMenuAccess.menuId] });
+      }
+
+      const overtimeMenu = leafMenus.find((m) => m.code === "overtime_applications");
+      if (overtimeMenu) {
+        await this.db
+          .insert(roleMenuAccess)
+          .values({
+            roleId: employeeRole.id,
+            menuId: overtimeMenu.id,
+            canView: true,
+            canCreate: true,
+            canUpdate: true,
             canDelete: false,
           })
           .onConflictDoNothing({ target: [roleMenuAccess.roleId, roleMenuAccess.menuId] });
@@ -714,6 +757,30 @@ export class RbacService {
     }
 
     return { role, permissions, navigation };
+  }
+
+  /**
+   * Resolves a user's RBAC permissions and administrative authority flags.
+   * Per Modules 11 & 12: administrative authority includes system admin role,
+   * user_management view, or approver_setup view.
+   */
+  async getActorAuthority(userId: string): Promise<{
+    roleCode: string | null;
+    permissions: Record<string, MenuPermissionFlags>;
+    isAdmin: boolean;
+  }> {
+    const access = await this.getCurrentUserAccess(userId);
+    const roleCode = access.role?.code ?? null;
+    const isAdmin =
+      roleCode === "admin" ||
+      Boolean(access.permissions.user_management?.canView) ||
+      Boolean(access.permissions.approver_setup?.canView);
+
+    return {
+      roleCode,
+      permissions: access.permissions,
+      isAdmin,
+    };
   }
 
   private async validateAndFilterGrants(

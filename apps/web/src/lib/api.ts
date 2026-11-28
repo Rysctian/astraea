@@ -1,11 +1,13 @@
 import type {
   AssignUserRoleDto,
+  AttendanceLogRecord,
   AttendancePolicyOptionsResponse,
   AttendancePolicyRecord,
   BatchAssignScheduleDto,
   CreateAttendancePolicyDto,
   CreateCutOffDto,
   CreateEmployeeDto,
+  CreateManualLogDto,
   CreateReferenceItemDto,
   CreateRoleDto,
   CreateScheduleDto,
@@ -14,9 +16,14 @@ import type {
   CutOffPresetItem,
   CutOffRecord,
   CutOffScheduleType,
+  DtrQuery,
+  DtrResponse,
   Employee,
   EmployeeScheduleRecord,
   EmployeeSupervisorSummary,
+  ImportLogsResult,
+  ImportLogsRowError,
+  ListAttendanceLogsQuery,
   ListAttendancePoliciesQuery,
   ListCutOffsQuery,
   ListEmployeeSchedulesQuery,
@@ -27,6 +34,7 @@ import type {
   ListSchedulesQuery,
   ListUsersQuery,
   LoginDto,
+  ManualLogResult,
   MenuCatalogGroup,
   OrgActiveOptions,
   OrgEntityType,
@@ -79,6 +87,7 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public readonly status: number,
+    public readonly rowErrors?: ImportLogsRowError[],
   ) {
     super(message);
     this.name = "ApiError";
@@ -325,4 +334,35 @@ export const api = {
       method: "PATCH",
       body: JSON.stringify(data),
     }),
+
+  // Attendance & Logs (DTR)
+  getDtr: (query: DtrQuery) => request<DtrResponse>(`/attendance/dtr${toQueryString(query)}`),
+  listAttendanceLogs: (query: Partial<ListAttendanceLogsQuery> = {}) =>
+    request<PaginatedResponse<AttendanceLogRecord>>(`/attendance/logs${toQueryString(query)}`),
+  createManualLogs: (data: CreateManualLogDto) =>
+    request<ManualLogResult>("/attendance/logs/manual", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  getAttendanceTemplateUrl: () => `${webEnv.VITE_API_URL}/attendance/logs/template`,
+  importAttendanceLogs: async (file: File): Promise<ImportLogsResult> => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`${webEnv.VITE_API_URL}/attendance/logs/import`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+    if (!res.ok) {
+      const body = (await res.json().catch(() => null)) as {
+        message?: string | string[];
+        errors?: ImportLogsRowError[];
+      } | null;
+      const message = Array.isArray(body?.message)
+        ? body.message.join(", ")
+        : (body?.message ?? `Import failed with status ${res.status}`);
+      throw new ApiError(message, res.status, body?.errors);
+    }
+    return (await res.json()) as ImportLogsResult;
+  },
 };

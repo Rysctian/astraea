@@ -1,6 +1,8 @@
 import { getTableConfig } from "drizzle-orm/pg-core";
 import { describe, expect, it } from "vitest";
 import { createDb } from "../client.js";
+import { applicationApprovals, approverSetups } from "./approvals.js";
+import { employeeAttendance, employeeAttendanceLogs, employeeLogs } from "./attendance.js";
 import { attendancePolicies } from "./attendance-policies.js";
 import { cutOffPeriods, cutOffs } from "./cut-offs.js";
 import { employeeIdSequences, employees } from "./employees.js";
@@ -12,6 +14,7 @@ import {
   reportsItems,
   sections,
 } from "./organization.js";
+import { overtimeApplicationDetails, overtimeApplications } from "./overtime.js";
 import { menus, roleMenuAccess, roles } from "./rbac.js";
 import { setupReferenceItems } from "./reference-items.js";
 import { employeeSchedules, scheduleDetails, schedules } from "./schedules.js";
@@ -66,6 +69,13 @@ describe("database schema", () => {
     expect(getTableConfig(roles).name).toBe("roles");
     expect(getTableConfig(menus).name).toBe("menus");
     expect(getTableConfig(roleMenuAccess).name).toBe("role_menu_access");
+    expect(getTableConfig(employeeLogs).name).toBe("employee_logs");
+    expect(getTableConfig(employeeAttendance).name).toBe("employee_attendance");
+    expect(getTableConfig(employeeAttendanceLogs).name).toBe("employee_attendance_logs");
+    expect(getTableConfig(approverSetups).name).toBe("approver_setups");
+    expect(getTableConfig(applicationApprovals).name).toBe("application_approvals");
+    expect(getTableConfig(overtimeApplications).name).toBe("overtime_applications");
+    expect(getTableConfig(overtimeApplicationDetails).name).toBe("overtime_application_details");
   });
 
   it("throws when createDb receives an empty connection string", () => {

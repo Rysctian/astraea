@@ -1,6 +1,7 @@
 import { Module, StandardSchemaValidationPipe } from "@nestjs/common";
 import { APP_FILTER, APP_PIPE } from "@nestjs/core";
 import { LoggerModule } from "nestjs-pino";
+import { AttendanceModule } from "./attendance/attendance.module.js";
 import { AttendancePoliciesModule } from "./attendance-policies/attendance-policies.module.js";
 import { AuthModule } from "./auth/auth.module.js";
 import { HttpExceptionFilter } from "./common/filters/http-exception.filter.js";
@@ -30,6 +31,7 @@ import { UsersModule } from "./users/users.module.js";
     }),
     DatabaseModule,
     AuthModule,
+    AttendanceModule,
     AttendancePoliciesModule,
     CutOffsModule,
     EmployeesModule,
