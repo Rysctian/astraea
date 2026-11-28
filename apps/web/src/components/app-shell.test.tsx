@@ -20,6 +20,7 @@ describe("AppShell (Sidebar + Header)", () => {
         user={{
           id: "550e8400-e29b-41d4-a716-446655440000",
           employeeId: null,
+          roleId: 1,
           name: "Admin Employee",
           email: "admin@astraea.local",
           createdAt: "2026-11-27T00:00:00.000Z",

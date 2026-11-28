@@ -11,6 +11,7 @@ import { DatabaseModule } from "./database/database.module.js";
 import { EmployeesModule } from "./employees/employees.module.js";
 import { HealthModule } from "./health/health.module.js";
 import { OrganizationModule } from "./organization/organization.module.js";
+import { RbacModule } from "./rbac/rbac.module.js";
 import { ReferenceSetupModule } from "./reference-setup/reference-setup.module.js";
 import { SchedulesModule } from "./schedules/schedules.module.js";
 import { UsersModule } from "./users/users.module.js";
@@ -33,6 +34,7 @@ import { UsersModule } from "./users/users.module.js";
     CutOffsModule,
     EmployeesModule,
     OrganizationModule,
+    RbacModule,
     ReferenceSetupModule,
     SchedulesModule,
     HealthModule,

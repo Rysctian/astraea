@@ -9,6 +9,7 @@ export {
   reportsItems,
   sections,
 } from "./organization.js";
+export { menus, roleMenuAccess, roles } from "./rbac.js";
 export { setupReferenceItems } from "./reference-items.js";
 export { employeeSchedules, scheduleDetails, schedules } from "./schedules.js";
 export { sessions } from "./sessions.js";

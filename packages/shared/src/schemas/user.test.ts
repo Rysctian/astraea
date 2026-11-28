@@ -51,6 +51,7 @@ describe("user schemas", () => {
     const parsed = userSchema.parse({
       id: "550e8400-e29b-41d4-a716-446655440000",
       employeeId: null,
+      roleId: null,
       email: "alice@example.com",
       name: "Alice",
       createdAt: now,

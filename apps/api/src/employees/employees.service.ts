@@ -25,6 +25,7 @@ import { DB } from "../database/database.module.js";
 const publicUserColumns = {
   id: users.id,
   employeeId: users.employeeId,
+  roleId: users.roleId,
   email: users.email,
   name: users.name,
   createdAt: users.createdAt,

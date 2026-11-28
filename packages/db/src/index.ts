@@ -11,6 +11,7 @@ export {
   reportsItems,
   sections,
 } from "./schema/organization.js";
+export { menus, roleMenuAccess, roles } from "./schema/rbac.js";
 export { setupReferenceItems } from "./schema/reference-items.js";
 export { employeeSchedules, scheduleDetails, schedules } from "./schema/schedules.js";
 export { sessions } from "./schema/sessions.js";

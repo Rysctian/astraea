@@ -48,6 +48,7 @@ describe("HTTP pipeline (NestJS 12 + Fastify 5 + Standard Schema)", () => {
       const user: User = {
         id: "550e8400-e29b-41d4-a716-446655440000",
         employeeId: null,
+        roleId: null,
         email: dto.email,
         name: dto.name,
         createdAt: now,

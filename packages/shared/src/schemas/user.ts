@@ -25,13 +25,30 @@ export const userIdParamSchema = z.object({
   id: z.uuid(),
 });
 
+const dateOnlyOptional = z.preprocess(
+  (v) => (typeof v === "string" && v.trim() === "" ? undefined : v),
+  z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be YYYY-MM-DD")
+    .optional(),
+);
+
 export const listUsersQuerySchema = paginationQuerySchema.extend({
   search: z.string().trim().optional(),
   role: z.enum(["all", "admin", "member"]).default("all"),
-  sortBy: z.enum(["createdAt", "name", "email"]).default("createdAt"),
+  roleId: z.preprocess(
+    (v) => (v === "" || v === null || v === undefined ? undefined : v),
+    z.coerce.number().int().positive().optional(),
+  ),
+  createdFrom: dateOnlyOptional,
+  createdTo: dateOnlyOptional,
+  sortBy: z.enum(["createdAt", "name", "email", "employeeId", "roleId"]).default("createdAt"),
 });
 
-export type User = z.infer<typeof userSchema>;
+export type User = z.infer<typeof userSchema> & {
+  roleCode?: string | null;
+  roleName?: string | null;
+};
 export type CreateUserDto = z.infer<typeof createUserSchema>;
 export type UpdateUserDto = z.infer<typeof updateUserSchema>;
 export type UserIdParam = z.infer<typeof userIdParamSchema>;

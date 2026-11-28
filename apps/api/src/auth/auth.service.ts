@@ -15,6 +15,7 @@ import {
 const publicUserColumns = {
   id: users.id,
   employeeId: users.employeeId,
+  roleId: users.roleId,
   email: users.email,
   name: users.name,
   createdAt: users.createdAt,
@@ -75,6 +76,7 @@ export class AuthService {
       .select({
         id: users.id,
         employeeId: users.employeeId,
+        roleId: users.roleId,
         email: users.email,
         name: users.name,
         passwordHash: users.passwordHash,
@@ -97,6 +99,7 @@ export class AuthService {
     const user: User = {
       id: account.id,
       employeeId: account.employeeId,
+      roleId: account.roleId,
       email: account.email,
       name: account.name,
       createdAt: account.createdAt,

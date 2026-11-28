@@ -1,5 +1,5 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { type Database, users } from "@starter/db";
+import { type Database, roles, users } from "@starter/db";
 import type {
   CreateUserDto,
   ListUsersQuery,
@@ -7,12 +7,26 @@ import type {
   UpdateUserDto,
   User,
 } from "@starter/shared";
-import { and, asc, count, desc, eq, ilike, not, or, type SQL } from "drizzle-orm";
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  lte,
+  not,
+  or,
+  type SQL,
+} from "drizzle-orm";
 import { DB } from "../database/database.module.js";
 
 const publicUserColumns = {
   id: users.id,
   employeeId: users.employeeId,
+  roleId: users.roleId,
   email: users.email,
   name: users.name,
   createdAt: users.createdAt,
@@ -46,7 +60,9 @@ export class UsersService {
       }
     }
 
-    if (query.role === "admin") {
+    if (query.roleId !== undefined) {
+      conditions.push(eq(users.roleId, query.roleId));
+    } else if (query.role === "admin") {
       const adminCond = or(ilike(users.email, "%admin%"), ilike(users.name, "%admin%"));
       if (adminCond) {
         conditions.push(adminCond);
@@ -58,6 +74,13 @@ export class UsersService {
       }
     }
 
+    if (query.createdFrom) {
+      conditions.push(gte(users.createdAt, new Date(`${query.createdFrom}T00:00:00Z`)));
+    }
+    if (query.createdTo) {
+      conditions.push(lte(users.createdAt, new Date(`${query.createdTo}T23:59:59.999Z`)));
+    }
+
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
     const sortColumn =
@@ -65,7 +88,11 @@ export class UsersService {
         ? users.name
         : query.sortBy === "email"
           ? users.email
-          : users.createdAt;
+          : query.sortBy === "employeeId"
+            ? users.employeeId
+            : query.sortBy === "roleId"
+              ? users.roleId
+              : users.createdAt;
     const orderByExpr = query.sortDir === "asc" ? asc(sortColumn) : desc(sortColumn);
 
     const offset = (query.page - 1) * query.pageSize;
@@ -73,13 +100,34 @@ export class UsersService {
     const [totalRow] = await this.db.select({ value: count() }).from(users).where(whereClause);
 
     const total = Number(totalRow?.value ?? 0);
-    const data = await this.db
+    const rows = await this.db
       .select(publicUserColumns)
       .from(users)
       .where(whereClause)
       .orderBy(orderByExpr)
       .limit(query.pageSize)
       .offset(offset);
+
+    const roleIds = Array.from(
+      new Set(rows.map((u) => u.roleId).filter((id): id is number => id !== null)),
+    );
+    const roleRows =
+      roleIds.length > 0
+        ? await this.db
+            .select({ id: roles.id, code: roles.code, name: roles.name })
+            .from(roles)
+            .where(inArray(roles.id, roleIds))
+        : [];
+    const roleMap = new Map(roleRows.map((r) => [r.id, r]));
+
+    const data: User[] = rows.map((u) => {
+      const role = u.roleId !== null ? roleMap.get(u.roleId) : undefined;
+      return {
+        ...u,
+        roleCode: role?.code ?? null,
+        roleName: role?.name ?? null,
+      };
+    });
 
     return {
       data,

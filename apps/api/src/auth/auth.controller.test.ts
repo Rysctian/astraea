@@ -41,6 +41,7 @@ describe("Auth HTTP pipeline (cookie sessions)", () => {
       const user: User = {
         id: "550e8400-e29b-41d4-a716-446655440001",
         employeeId: null,
+        roleId: null,
         email: dto.email,
         name: dto.name,
         createdAt: now,

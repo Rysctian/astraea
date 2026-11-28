@@ -12,6 +12,7 @@ import {
   reportsItems,
   sections,
 } from "./organization.js";
+import { menus, roleMenuAccess, roles } from "./rbac.js";
 import { setupReferenceItems } from "./reference-items.js";
 import { employeeSchedules, scheduleDetails, schedules } from "./schedules.js";
 import { users } from "./users.js";
@@ -25,6 +26,7 @@ describe("database schema", () => {
     expect(columnNames).toEqual([
       "id",
       "employee_id",
+      "role_id",
       "email",
       "name",
       "password_hash",
@@ -61,6 +63,9 @@ describe("database schema", () => {
     expect(getTableConfig(employeeSchedules).name).toBe("employee_schedules");
     expect(getTableConfig(cutOffs).name).toBe("cut_offs");
     expect(getTableConfig(cutOffPeriods).name).toBe("cut_off_periods");
+    expect(getTableConfig(roles).name).toBe("roles");
+    expect(getTableConfig(menus).name).toBe("menus");
+    expect(getTableConfig(roleMenuAccess).name).toBe("role_menu_access");
   });
 
   it("throws when createDb receives an empty connection string", () => {

@@ -1,56 +1,56 @@
+import type { CreateRoleDto, RoleRecord, UpdateRoleDto } from "@starter/shared";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ColumnVisibilityState, SortingState } from "@tanstack/react-table";
-import {
-  ArrowUpDown,
-  Circle,
-  CircleDashed,
-  Filter,
-  Kanban,
-  List,
-  Plus,
-  Search,
-  Shield,
-  SignalHigh,
-  SignalMedium,
-  Table2,
-  Trash2,
-} from "lucide-react";
+import { Filter, Pencil, Plus, Search, Shield, ShieldCheck, Trash2, Users } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/calendar";
 import {
   ColumnVisibilityPopover,
   type ServerColumnDef,
   ServerDataTable,
 } from "@/components/ui/data-table";
+import { ConfirmDialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverLabel } from "@/components/ui/popover";
+import { SelectMenu } from "@/components/ui/select";
+import { TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RoleDrawer } from "@/features/users/role-drawer";
 import { UserCreateDrawer } from "@/features/users/user-create-drawer";
 import { type ApiUser, api } from "@/lib/api";
 import { useWorkspaceActions } from "@/lib/workspace-actions";
 
-type ViewMode = "list" | "board" | "table";
-type RoleFilter = "all" | "admin" | "member";
-type UserSortField = "createdAt" | "name" | "email";
+type UserManagementTab = "users" | "roles";
 
-const COLUMN_TOGGLE_OPTIONS = [
-  { id: "status", label: "Status" },
-  { id: "role", label: "Role" },
+const USER_COLUMN_OPTIONS = [
+  { id: "employeeId", label: "Employee ID" },
   { id: "email", label: "Email" },
-  { id: "labels", label: "Labels" },
+  { id: "currentRole", label: "Current Role" },
+  { id: "accessRole", label: "Access Role" },
   { id: "createdAt", label: "Created" },
-  { id: "updatedAt", label: "Updated" },
-  { id: "module", label: "Module" },
 ];
 
-const DEFAULT_VISIBILITY: ColumnVisibilityState = {
-  status: true,
-  role: true,
+const DEFAULT_USER_VISIBILITY: ColumnVisibilityState = {
+  employeeId: true,
   email: true,
-  labels: true,
+  currentRole: true,
+  accessRole: true,
   createdAt: true,
-  updatedAt: false,
-  module: true,
+};
+
+const ROLE_COLUMN_OPTIONS = [
+  { id: "code", label: "Code" },
+  { id: "grants", label: "Permissions" },
+  { id: "users", label: "Assigned Users" },
+  { id: "createdAt", label: "Created" },
+];
+
+const DEFAULT_ROLE_VISIBILITY: ColumnVisibilityState = {
+  code: true,
+  grants: true,
+  users: true,
+  createdAt: true,
 };
 
 const AVATAR_TONES = [
@@ -61,22 +61,10 @@ const AVATAR_TONES = [
   "bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300",
 ] as const;
 
-function isAdminUser(user: ApiUser): boolean {
-  return user.email.toLowerCase().includes("admin") || user.name.toLowerCase().includes("admin");
-}
-
-function getShortCode(user: ApiUser): string {
-  return user.employeeId ?? `USR-${user.id.replaceAll("-", "").slice(0, 4).toUpperCase()}`;
-}
-
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) {
-    return "U";
-  }
-  if (parts.length === 1) {
-    return (parts[0] ?? "U").slice(0, 2).toUpperCase();
-  }
+  if (parts.length === 0) return "U";
+  if (parts.length === 1) return (parts[0] ?? "U").slice(0, 2).toUpperCase();
   return `${parts[0]?.[0] ?? ""}${parts[parts.length - 1]?.[0] ?? ""}`.toUpperCase();
 }
 
@@ -90,10 +78,12 @@ function getAvatarTone(seed: string): string {
 
 function formatShortDate(iso: string): string {
   const date = new Date(iso);
-  if (Number.isNaN(date.getTime())) {
-    return "—";
-  }
-  return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(date);
+  if (Number.isNaN(date.getTime())) return "—";
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
 }
 
 export function UsersPage() {
@@ -101,162 +91,290 @@ export function UsersPage() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { registerCreateHandler, registerSearchFocusHandler } = useWorkspaceActions();
 
+  const [activeTab, setActiveTab] = useState<UserManagementTab>("users");
+
+  // Users tab state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
   const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
+  const [roleIdFilter, setRoleIdFilter] = useState("");
+  const [createdFrom, setCreatedFrom] = useState("");
+  const [createdTo, setCreatedTo] = useState("");
   const [sorting, setSorting] = useState<SortingState>([{ id: "createdAt", desc: true }]);
-  const [viewMode, setViewMode] = useState<ViewMode>("table");
   const [columnVisibility, setColumnVisibility] =
-    useState<ColumnVisibilityState>(DEFAULT_VISIBILITY);
-
+    useState<ColumnVisibilityState>(DEFAULT_USER_VISIBILITY);
   const [filterOpen, setFilterOpen] = useState(false);
-  const [sortOpen, setSortOpen] = useState(false);
   const [columnsOpen, setColumnsOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
-  const [deleteError, setDeleteError] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [assignError, setAssignError] = useState<string | null>(null);
+  const [assigningUserId, setAssigningUserId] = useState<string | null>(null);
+  const [deleteUserTarget, setDeleteUserTarget] = useState<ApiUser | null>(null);
+  const [deleteUserError, setDeleteUserError] = useState<string | null>(null);
 
-  registerCreateHandler(() => setCreateOpen(true));
+  // Roles tab state
+  const [rolesPage, setRolesPage] = useState(1);
+  const [rolesPageSize, setRolesPageSize] = useState(20);
+  const [rolesSearch, setRolesSearch] = useState("");
+  const [rolesCreatedFrom, setRolesCreatedFrom] = useState("");
+  const [rolesCreatedTo, setRolesCreatedTo] = useState("");
+  const [rolesSorting, setRolesSorting] = useState<SortingState>([{ id: "createdAt", desc: true }]);
+  const [rolesVisibility, setRolesVisibility] =
+    useState<ColumnVisibilityState>(DEFAULT_ROLE_VISIBILITY);
+  const [rolesFilterOpen, setRolesFilterOpen] = useState(false);
+  const [rolesColumnsOpen, setRolesColumnsOpen] = useState(false);
+
+  const [roleDrawerOpen, setRoleDrawerOpen] = useState(false);
+  const [editingRoleId, setEditingRoleId] = useState<number | null>(null);
+  const [roleDrawerError, setRoleDrawerError] = useState<string | null>(null);
+  const [deleteRoleTarget, setDeleteRoleTarget] = useState<RoleRecord | null>(null);
+  const [deleteRoleError, setDeleteRoleError] = useState<string | null>(null);
+
+  const openCreateRole = () => {
+    setEditingRoleId(null);
+    setRoleDrawerError(null);
+    setRoleDrawerOpen(true);
+  };
+
+  registerCreateHandler(() => (activeTab === "users" ? setCreateOpen(true) : openCreateRole()));
   registerSearchFocusHandler(() => searchInputRef.current?.focus());
 
+  // Role options & menu catalog
+  const roleOptionsQuery = useQuery({
+    queryKey: ["rbac", "role-options"],
+    queryFn: api.getRoleOptions,
+  });
+
+  const menuCatalogQuery = useQuery({
+    queryKey: ["rbac", "menus"],
+    queryFn: api.getMenuCatalog,
+    enabled: activeTab === "roles" || roleDrawerOpen,
+  });
+
+  const roleDetailQuery = useQuery({
+    queryKey: ["rbac", "role-detail", editingRoleId],
+    queryFn: () => api.getRoleById(editingRoleId as number),
+    enabled: roleDrawerOpen && editingRoleId !== null,
+  });
+
+  // Users query
   const activeSort = sorting[0];
-  const sortBy: UserSortField =
-    activeSort?.id === "name" || activeSort?.id === "email" ? activeSort.id : "createdAt";
-  const sortDir: "asc" | "desc" = activeSort?.desc === false ? "asc" : "desc";
+  const sortBy =
+    activeSort?.id === "name" ||
+    activeSort?.id === "email" ||
+    activeSort?.id === "employeeId" ||
+    activeSort?.id === "roleId"
+      ? activeSort.id
+      : "createdAt";
+  const sortDir: "asc" | "desc" = activeSort?.desc ? "desc" : "asc";
 
   const usersQuery = useQuery({
-    queryKey: ["users", { page, pageSize, search, roleFilter, sortBy, sortDir }],
+    queryKey: [
+      "users",
+      {
+        page,
+        pageSize,
+        search: search.trim(),
+        roleIdFilter,
+        createdFrom,
+        createdTo,
+        sortBy,
+        sortDir,
+      },
+    ],
     queryFn: () =>
       api.listUsers({
         page,
         pageSize,
         search: search.trim() || undefined,
-        role: roleFilter,
+        roleId: roleIdFilter ? Number(roleIdFilter) : undefined,
+        createdFrom: createdFrom || undefined,
+        createdTo: createdTo || undefined,
         sortBy,
         sortDir,
       }),
     placeholderData: keepPreviousData,
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: api.deleteUser,
-    onMutate: (id) => {
-      setDeletingId(id);
-      setDeleteError(null);
+  // Roles query
+  const roleActiveSort = rolesSorting[0];
+  const roleSortBy =
+    roleActiveSort?.id === "id" || roleActiveSort?.id === "code" || roleActiveSort?.id === "name"
+      ? roleActiveSort.id
+      : "createdAt";
+  const roleSortDir: "asc" | "desc" = roleActiveSort?.desc ? "desc" : "asc";
+
+  const rolesQuery = useQuery({
+    queryKey: [
+      "rbac",
+      "roles",
+      {
+        rolesPage,
+        rolesPageSize,
+        rolesSearch: rolesSearch.trim(),
+        rolesCreatedFrom,
+        rolesCreatedTo,
+        roleSortBy,
+        roleSortDir,
+      },
+    ],
+    queryFn: () =>
+      api.listRoles({
+        page: rolesPage,
+        pageSize: rolesPageSize,
+        search: rolesSearch.trim() || undefined,
+        createdFrom: rolesCreatedFrom || undefined,
+        createdTo: rolesCreatedTo || undefined,
+        sortBy: roleSortBy,
+        sortDir: roleSortDir,
+      }),
+    placeholderData: keepPreviousData,
+    enabled: activeTab === "roles",
+  });
+
+  const invalidateRbacAndUsers = async () => {
+    await Promise.all([
+      queryClient.invalidateQueries({ queryKey: ["users"] }),
+      queryClient.invalidateQueries({ queryKey: ["rbac"] }),
+    ]);
+  };
+
+  const assignRoleMutation = useMutation({
+    mutationFn: ({ userId, roleId }: { userId: string; roleId: number }) =>
+      api.assignUserRole(userId, { roleId }),
+    onMutate: ({ userId }) => {
+      setAssignError(null);
+      setAssigningUserId(userId);
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      await invalidateRbacAndUsers();
     },
     onError: (err: Error) => {
-      setDeleteError(err.message);
+      setAssignError(err.message);
     },
     onSettled: () => {
-      setDeletingId(null);
+      setAssigningUserId(null);
     },
   });
 
-  const columns = useMemo<ServerColumnDef<ApiUser>[]>(
+  const deleteUserMutation = useMutation({
+    mutationFn: (id: string) => api.deleteUser(id),
+    onSuccess: async () => {
+      setDeleteUserTarget(null);
+      setDeleteUserError(null);
+      await invalidateRbacAndUsers();
+    },
+    onError: (err: Error) => setDeleteUserError(err.message),
+  });
+
+  const createRoleMutation = useMutation({
+    mutationFn: (payload: CreateRoleDto) => api.createRole(payload),
+    onSuccess: async () => {
+      setRoleDrawerOpen(false);
+      setRoleDrawerError(null);
+      await invalidateRbacAndUsers();
+    },
+    onError: (err: Error) => setRoleDrawerError(err.message),
+  });
+
+  const updateRoleMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: UpdateRoleDto }) =>
+      api.updateRole(id, payload),
+    onSuccess: async () => {
+      setRoleDrawerOpen(false);
+      setRoleDrawerError(null);
+      await invalidateRbacAndUsers();
+    },
+    onError: (err: Error) => setRoleDrawerError(err.message),
+  });
+
+  const deleteRoleMutation = useMutation({
+    mutationFn: (id: number) => api.deleteRole(id),
+    onSuccess: async () => {
+      setDeleteRoleTarget(null);
+      setDeleteRoleError(null);
+      await invalidateRbacAndUsers();
+    },
+    onError: (err: Error) => setDeleteRoleError(err.message),
+  });
+
+  const roleOptions = roleOptionsQuery.data ?? [];
+
+  const userColumns = useMemo<ServerColumnDef<ApiUser>[]>(
     () => [
       {
         id: "name",
         accessorKey: "name",
-        header: "User",
+        header: "Employee",
         enableSorting: true,
         cell: ({ row }) => {
           const user = row.original;
-          const admin = isAdminUser(user);
           return (
-            <div className="flex min-w-[220px] items-center justify-between gap-4">
-              <div className="flex min-w-0 items-center gap-2.5">
-                {admin ? (
-                  <Circle className="h-3.5 w-3.5 shrink-0 text-primary" aria-hidden="true" />
-                ) : (
-                  <CircleDashed
-                    className="h-3.5 w-3.5 shrink-0 text-muted-foreground/70"
-                    aria-hidden="true"
-                  />
-                )}
-                <span className="truncate font-medium text-foreground">{user.name}</span>
-              </div>
-              <span className="shrink-0 font-mono text-[11px] text-muted-foreground/85 tabular-nums">
-                {getShortCode(user)}
+            <div className="flex min-w-0 items-center gap-2.5">
+              <span
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${getAvatarTone(user.email)}`}
+              >
+                {getInitials(user.name)}
               </span>
+              <div className="min-w-0">
+                <p className="truncate font-medium text-foreground">{user.name}</p>
+                <p className="truncate text-[11px] text-muted-foreground">{user.email}</p>
+              </div>
             </div>
           );
         },
       },
       {
-        id: "status",
-        header: "Status",
-        enableSorting: false,
-        cell: () => (
-          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Circle className="h-3 w-3 text-emerald-500" aria-hidden="true" />
-            <span>Active</span>
+        id: "employeeId",
+        accessorKey: "employeeId",
+        header: "Employee ID",
+        enableSorting: true,
+        cell: ({ row }) => (
+          <span className="font-mono text-xs text-muted-foreground">
+            {row.original.employeeId ?? "—"}
           </span>
         ),
-      },
-      {
-        id: "role",
-        header: "Role",
-        enableSorting: false,
-        cell: ({ row }) => {
-          const admin = isAdminUser(row.original);
-          return (
-            <span className="inline-flex items-center gap-1.5 text-xs text-foreground">
-              {admin ? (
-                <SignalHigh className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
-              ) : (
-                <SignalMedium className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
-              )}
-              <span>{admin ? "Admin" : "Employee"}</span>
-            </span>
-          );
-        },
       },
       {
         id: "email",
         accessorKey: "email",
         header: "Email",
         enableSorting: true,
+        cell: ({ row }) => (
+          <span className="text-xs text-muted-foreground">{row.original.email}</span>
+        ),
+      },
+      {
+        id: "currentRole",
+        header: "Current Role",
+        enableSorting: false,
         cell: ({ row }) => {
-          const user = row.original;
-          return (
-            <div className="flex items-center gap-2">
-              <span
-                className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[9px] font-semibold ${getAvatarTone(user.email)}`}
-              >
-                {getInitials(user.name)}
-              </span>
-              <span className="truncate text-foreground/90">{user.email}</span>
-            </div>
-          );
+          const u = row.original;
+          if (!u.roleName) {
+            return <Badge variant="neutral">Unassigned</Badge>;
+          }
+          return <Badge variant={u.roleCode === "admin" ? "purple" : "blue"}>{u.roleName}</Badge>;
         },
       },
       {
-        id: "labels",
-        header: "Labels",
+        id: "accessRole",
+        header: "Access Role",
         enableSorting: false,
         cell: ({ row }) => {
-          const admin = isAdminUser(row.original);
+          const u = row.original;
+          const isSaving = assigningUserId === u.id;
           return (
-            <div className="flex items-center gap-1.5">
-              <Badge
-                variant={admin ? "purple" : "neutral"}
-                dotColor={admin ? "bg-purple-500" : "bg-emerald-500"}
-              >
-                {admin ? "RBAC" : "HRIS"}
-              </Badge>
-              {row.original.employeeId ? (
-                <Badge variant="blue" dotColor="bg-blue-500">
-                  201 Linked
-                </Badge>
-              ) : (
-                <Badge variant="neutral" dotColor="bg-sky-500">
-                  Portal
-                </Badge>
-              )}
+            <div className="w-44">
+              <SelectMenu
+                className="h-8 text-xs"
+                placeholder="Assign role..."
+                disabled={isSaving || roleOptions.length === 0}
+                value={u.roleId ? String(u.roleId) : ""}
+                onValueChange={(nextRoleId) => {
+                  if (!nextRoleId || Number(nextRoleId) === u.roleId) return;
+                  assignRoleMutation.mutate({ userId: u.id, roleId: Number(nextRoleId) });
+                }}
+                options={roleOptions.map((r) => ({ value: String(r.id), label: r.name }))}
+              />
             </div>
           );
         },
@@ -267,362 +385,568 @@ export function UsersPage() {
         header: "Created",
         enableSorting: true,
         cell: ({ row }) => (
-          <span className="text-xs text-muted-foreground tabular-nums">
+          <span className="tabular-nums text-xs text-muted-foreground">
             {formatShortDate(row.original.createdAt)}
           </span>
         ),
       },
       {
-        id: "updatedAt",
-        accessorKey: "updatedAt",
-        header: "Updated",
+        id: "actions",
+        header: "",
         enableSorting: false,
         cell: ({ row }) => (
-          <span className="text-xs text-muted-foreground tabular-nums">
-            {formatShortDate(row.original.updatedAt)}
-          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+            aria-label={`Delete ${row.original.name}`}
+            onClick={() => {
+              setDeleteUserTarget(row.original);
+              setDeleteUserError(null);
+            }}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
         ),
       },
+    ],
+    [roleOptions, assigningUserId, assignRoleMutation],
+  );
+
+  const roleColumns = useMemo<ServerColumnDef<RoleRecord>[]>(
+    () => [
       {
-        id: "module",
-        header: "Module",
+        id: "actions",
+        header: "Actions",
         enableSorting: false,
         cell: ({ row }) => {
-          const admin = isAdminUser(row.original);
+          const item = row.original;
           return (
-            <span className="inline-flex items-center gap-2 text-xs text-foreground">
-              <span
-                className={`h-2 w-2 rounded-full ${admin ? "bg-indigo-500" : "bg-sky-500"}`}
-                aria-hidden="true"
-              />
-              <span>{admin ? "User Management" : "Employee 201"}</span>
-            </span>
+            <div className="flex items-center gap-1">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0"
+                aria-label={`Edit ${item.name}`}
+                onClick={() => {
+                  setEditingRoleId(item.id);
+                  setRoleDrawerError(null);
+                  setRoleDrawerOpen(true);
+                }}
+              >
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7 w-7 p-0 text-destructive hover:text-destructive"
+                aria-label={`Delete ${item.name}`}
+                title={item.deleteBlockedReason ?? "Delete role"}
+                onClick={() => {
+                  setDeleteRoleTarget(item);
+                  setDeleteRoleError(null);
+                }}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </Button>
+            </div>
           );
         },
       },
       {
-        id: "actions",
-        header: () => <span className="sr-only">Actions</span>,
-        enableSorting: false,
+        id: "name",
+        accessorKey: "name",
+        header: "Name",
+        enableSorting: true,
         cell: ({ row }) => (
-          <div className="text-right">
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 text-muted-foreground opacity-70 transition-opacity hover:text-destructive group-hover:opacity-100"
-              aria-label={`Delete ${row.original.name}`}
-              disabled={deletingId === row.original.id}
-              onClick={() => deleteMutation.mutate(row.original.id)}
-            >
-              <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
-            </Button>
+          <div className="flex items-center gap-2">
+            <Shield className="h-3.5 w-3.5 text-primary" aria-hidden="true" />
+            <span className="font-medium text-foreground">{row.original.name}</span>
+            {row.original.isSystem ? (
+              <Badge variant="neutral" className="text-[10px]">
+                System
+              </Badge>
+            ) : null}
           </div>
         ),
       },
+      {
+        id: "code",
+        accessorKey: "code",
+        header: "Code",
+        enableSorting: true,
+        cell: ({ row }) => (
+          <Badge variant="blue" className="font-mono text-[11px]">
+            {row.original.code}
+          </Badge>
+        ),
+      },
+      {
+        id: "grants",
+        header: "Permissions",
+        enableSorting: false,
+        cell: ({ row }) => (
+          <span className="tabular-nums text-xs text-muted-foreground">
+            {row.original.grantCount} {row.original.grantCount === 1 ? "module" : "modules"}
+          </span>
+        ),
+      },
+      {
+        id: "users",
+        header: "Assigned Users",
+        enableSorting: false,
+        cell: ({ row }) => (
+          <span className="tabular-nums text-xs text-foreground">{row.original.userCount}</span>
+        ),
+      },
+      {
+        id: "createdAt",
+        accessorKey: "createdAt",
+        header: "Created",
+        enableSorting: true,
+        cell: ({ row }) => (
+          <span className="tabular-nums text-xs text-muted-foreground">
+            {formatShortDate(row.original.createdAt)}
+          </span>
+        ),
+      },
     ],
-    [deleteMutation, deletingId],
+    [],
   );
 
-  const rows = usersQuery.data?.data ?? [];
-  const meta = usersQuery.data?.meta ?? { page, pageSize, total: 0, totalPages: 1 };
+  const usersRows = usersQuery.data?.data ?? [];
+  const usersMeta = usersQuery.data?.meta ?? { total: 0, page, pageSize, totalPages: 1 };
+
+  const rolesRows = rolesQuery.data?.data ?? [];
+  const rolesMeta = rolesQuery.data?.meta ?? {
+    total: 0,
+    page: rolesPage,
+    pageSize: rolesPageSize,
+    totalPages: 1,
+  };
+
+  const userFilterCount = (roleIdFilter ? 1 : 0) + (createdFrom ? 1 : 0) + (createdTo ? 1 : 0);
+  const roleFilterCount = (rolesCreatedFrom ? 1 : 0) + (rolesCreatedTo ? 1 : 0);
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-wrap items-start justify-between gap-4 px-6 pb-4 pt-5">
+    <div className="flex flex-col gap-5 px-6 py-6">
+      <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-[22px] font-semibold tracking-tight text-foreground">Users</h1>
-          <p className="mt-0.5 text-[13px] text-muted-foreground">
-            Server-paginated workspace accounts across Astraea HRIS ({meta.total}{" "}
-            {meta.total === 1 ? "member" : "members"}).
+          <h1 className="text-xl font-semibold tracking-tight text-foreground">User Management</h1>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Assign RBAC roles to employee accounts and configure per-module CRUD permission
+            matrices.
           </p>
         </div>
 
-        <Button
-          type="button"
-          size="sm"
-          className="h-8.5 gap-1.5 rounded-md px-3 text-[13px] font-medium"
-          onClick={() => {
-            setColumnsOpen(false);
-            setFilterOpen(false);
-            setSortOpen(false);
-            setCreateOpen(true);
-          }}
-        >
-          <Plus className="h-4 w-4" aria-hidden="true" />
-          <span>New user</span>
-        </Button>
+        <div className="flex items-center gap-2">
+          {activeTab === "users" ? (
+            <Button type="button" size="sm" onClick={() => setCreateOpen(true)}>
+              <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+              New User
+            </Button>
+          ) : (
+            <Button type="button" size="sm" onClick={openCreateRole}>
+              <Plus className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
+              New Role
+            </Button>
+          )}
+        </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 px-6 pb-3">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <div className="relative">
-            <Search
-              className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <Input
-              ref={searchInputRef}
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search users..."
-              aria-label="Search users"
-              className="h-8 w-52 pl-8 text-xs"
+      {/* Segmented Tabs */}
+      <div>
+        <TabsList aria-label="User management views">
+          <TabsTrigger active={activeTab === "users"} onClick={() => setActiveTab("users")}>
+            <Users className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Employees (Users)</span>
+            <Badge variant="neutral" className="ml-0.5 px-1.5 py-0 text-[10px]">
+              {usersMeta.total}
+            </Badge>
+          </TabsTrigger>
+          <TabsTrigger active={activeTab === "roles"} onClick={() => setActiveTab("roles")}>
+            <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+            <span>Roles &amp; Permissions</span>
+            {roleOptions.length > 0 ? (
+              <Badge variant="neutral" className="ml-0.5 px-1.5 py-0 text-[10px]">
+                {roleOptions.length}
+              </Badge>
+            ) : null}
+          </TabsTrigger>
+        </TabsList>
+      </div>
+
+      {activeTab === "users" ? (
+        <>
+          {assignError ? (
+            <div
+              role="alert"
+              className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-2.5 text-xs text-destructive"
+            >
+              {assignError}
+            </div>
+          ) : null}
+
+          <ConfirmDialog
+            open={deleteUserTarget !== null}
+            onOpenChange={(open) => {
+              if (!open) {
+                setDeleteUserTarget(null);
+                setDeleteUserError(null);
+              }
+            }}
+            title={`Delete user "${deleteUserTarget?.name ?? ""}"?`}
+            description="This permanently deletes the user login account."
+            errorMessage={deleteUserError}
+            isPending={deleteUserMutation.isPending}
+            onConfirm={() => {
+              if (deleteUserTarget) {
+                deleteUserMutation.mutate(deleteUserTarget.id);
+              }
+            }}
+          />
+
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative w-64">
+              <Search
+                className="pointer-events-none absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                ref={searchInputRef}
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setPage(1);
+                }}
+                placeholder="Search name, email, or employee ID..."
+                className="h-8 pl-8 text-xs"
+              />
+            </div>
+
+            <Popover
+              open={filterOpen}
+              onOpenChange={setFilterOpen}
+              className="w-72 p-3"
+              trigger={
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-8 gap-1.5 text-xs"
+                  onClick={() => setFilterOpen((o) => !o)}
+                >
+                  <Filter className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Filter</span>
+                  {userFilterCount > 0 ? (
+                    <Badge variant="blue" className="ml-0.5 px-1.5 py-0 text-[10px]">
+                      {userFilterCount}
+                    </Badge>
+                  ) : null}
+                </Button>
+              }
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <PopoverLabel className="p-0">User Filters</PopoverLabel>
+                  {userFilterCount > 0 ? (
+                    <button
+                      type="button"
+                      className="cursor-pointer text-[11px] font-medium text-primary hover:underline"
+                      onClick={() => {
+                        setRoleIdFilter("");
+                        setCreatedFrom("");
+                        setCreatedTo("");
+                        setPage(1);
+                      }}
+                    >
+                      Clear all
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="space-y-1">
+                  <label
+                    htmlFor="usr-flt-role"
+                    className="text-[11px] font-medium text-muted-foreground"
+                  >
+                    Role
+                  </label>
+                  <SelectMenu
+                    id="usr-flt-role"
+                    className="h-8 text-xs"
+                    value={roleIdFilter}
+                    onValueChange={(val) => {
+                      setRoleIdFilter(val);
+                      setPage(1);
+                    }}
+                    options={[
+                      { value: "", label: "All roles" },
+                      ...roleOptions.map((r) => ({ value: String(r.id), label: r.name })),
+                    ]}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="usr-flt-from"
+                      className="text-[11px] font-medium text-muted-foreground"
+                    >
+                      Created From
+                    </label>
+                    <DatePicker
+                      id="usr-flt-from"
+                      className="h-8 text-xs"
+                      placeholder="Start"
+                      value={createdFrom}
+                      onChange={(val) => {
+                        setCreatedFrom(val);
+                        setPage(1);
+                      }}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="usr-flt-to"
+                      className="text-[11px] font-medium text-muted-foreground"
+                    >
+                      Created To
+                    </label>
+                    <DatePicker
+                      id="usr-flt-to"
+                      className="h-8 text-xs"
+                      placeholder="End"
+                      value={createdTo}
+                      onChange={(val) => {
+                        setCreatedTo(val);
+                        setPage(1);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Popover>
+
+            <ColumnVisibilityPopover
+              open={columnsOpen}
+              onOpenChange={setColumnsOpen}
+              options={USER_COLUMN_OPTIONS}
+              columnVisibility={columnVisibility}
+              onToggle={(id) =>
+                setColumnVisibility((prev) => ({ ...prev, [id]: prev[id] === false }))
+              }
+              onReset={() => setColumnVisibility(DEFAULT_USER_VISIBILITY)}
             />
           </div>
 
-          <Popover
-            open={filterOpen}
-            onOpenChange={setFilterOpen}
-            className="w-44"
-            trigger={
-              <Button
-                type="button"
-                variant={roleFilter !== "all" || filterOpen ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 gap-1.5 px-2.5 text-xs font-normal text-muted-foreground hover:text-foreground"
-                onClick={() => setFilterOpen((prev) => !prev)}
-              >
-                <Filter className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>
-                  {roleFilter === "all"
-                    ? "Filter"
-                    : roleFilter === "admin"
-                      ? "Filter: Admin"
-                      : "Filter: Member"}
-                </span>
-              </Button>
-            }
-          >
-            <PopoverLabel>Filter by role</PopoverLabel>
-            {(
-              [
-                { value: "all", label: "All users" },
-                { value: "admin", label: "Administrators" },
-                { value: "member", label: "Workspace members" },
-              ] as const
-            ).map((option) => (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => {
-                  setRoleFilter(option.value);
-                  setPage(1);
-                  setFilterOpen(false);
-                }}
-                className={`flex w-full cursor-pointer items-center justify-between rounded-md px-2 py-1.5 text-left text-xs transition-colors hover:bg-accent ${
-                  roleFilter === option.value
-                    ? "font-medium text-foreground"
-                    : "text-muted-foreground"
-                }`}
-              >
-                <span>{option.label}</span>
-                {roleFilter === option.value ? (
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-                ) : null}
-              </button>
-            ))}
-          </Popover>
-
-          <Popover
-            open={sortOpen}
-            onOpenChange={setSortOpen}
-            className="w-44"
-            trigger={
-              <Button
-                type="button"
-                variant={sortOpen ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 gap-1.5 px-2.5 text-xs font-normal text-muted-foreground hover:text-foreground"
-                onClick={() => setSortOpen((prev) => !prev)}
-              >
-                <ArrowUpDown className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>
-                  Sort:{" "}
-                  {sortBy === "createdAt" ? (sortDir === "desc" ? "Newest" : "Oldest") : sortBy}
-                </span>
-              </Button>
-            }
-          >
-            <PopoverLabel>Sort by</PopoverLabel>
-            {(
-              [
-                { id: "createdAt", desc: true, label: "Newest" },
-                { id: "createdAt", desc: false, label: "Oldest" },
-                { id: "name", desc: false, label: "Name (A–Z)" },
-                { id: "email", desc: false, label: "Email (A–Z)" },
-              ] as const
-            ).map((opt) => (
-              <button
-                key={opt.label}
-                type="button"
-                onClick={() => {
-                  setSorting([{ id: opt.id, desc: opt.desc }]);
-                  setPage(1);
-                  setSortOpen(false);
-                }}
-                className="flex w-full cursor-pointer items-center justify-between rounded-md px-2 py-1.5 text-left text-xs text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                <span>{opt.label}</span>
-              </button>
-            ))}
-          </Popover>
-
-          <ColumnVisibilityPopover
-            open={columnsOpen}
-            onOpenChange={setColumnsOpen}
-            options={COLUMN_TOGGLE_OPTIONS}
+          <ServerDataTable
+            data={usersRows}
+            columns={userColumns}
+            meta={usersMeta}
+            sorting={sorting}
+            onSortingChange={(updater) => {
+              setSorting((prev) => (typeof updater === "function" ? updater(prev) : updater));
+              setPage(1);
+            }}
             columnVisibility={columnVisibility}
-            onToggle={(id) =>
-              setColumnVisibility((prev) => ({ ...prev, [id]: prev[id] === false }))
+            onColumnVisibilityChange={setColumnVisibility}
+            onPageChange={setPage}
+            onPageSizeChange={(next) => {
+              setPageSize(next);
+              setPage(1);
+            }}
+            isPending={usersQuery.isPending}
+            isFetching={usersQuery.isFetching}
+            emptyState={
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-foreground">No users found</p>
+                <p className="text-xs text-muted-foreground">
+                  Create a user account or onboard an employee to manage access roles.
+                </p>
+              </div>
             }
-            onReset={() => setColumnVisibility(DEFAULT_VISIBILITY)}
           />
-        </div>
-
-        <div
-          role="tablist"
-          aria-label="View mode"
-          className="inline-flex items-center rounded-md border border-border/80 bg-muted/60 p-0.5"
-        >
-          {(
-            [
-              { id: "list", label: "List", icon: List },
-              { id: "board", label: "Board", icon: Kanban },
-              { id: "table", label: "Table", icon: Table2 },
-            ] as const
-          ).map((mode) => {
-            const Icon = mode.icon;
-            const active = viewMode === mode.id;
-            return (
-              <button
-                key={mode.id}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                onClick={() => setViewMode(mode.id)}
-                className={`inline-flex h-7 cursor-pointer items-center gap-1.5 rounded-[5px] px-2.5 text-xs transition-colors ${
-                  active
-                    ? "bg-background font-medium text-foreground shadow-2xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-                <span>{mode.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {deleteError ? (
-        <div
-          role="alert"
-          className="mx-6 mb-3 rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive"
-        >
-          {deleteError}
-        </div>
-      ) : null}
-
-      {usersQuery.isError ? (
-        <div
-          role="alert"
-          className="mx-6 my-4 rounded-md border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
-        >
-          {usersQuery.error.message}
-        </div>
-      ) : viewMode === "board" ? (
-        <div className="grid gap-4 border-t border-border p-6 md:grid-cols-2">
-          {(["Administrators", "Workspace Members"] as const).map((groupLabel) => {
-            const items = rows.filter((u) =>
-              groupLabel === "Administrators" ? isAdminUser(u) : !isAdminUser(u),
-            );
-            return (
-              <div
-                key={groupLabel}
-                className="flex flex-col gap-2.5 rounded-lg border border-border bg-muted/30 p-3"
-              >
-                <div className="flex items-center gap-2 px-1 text-xs font-medium text-foreground">
-                  <Shield className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
-                  <span>{groupLabel}</span>
-                  <span className="text-muted-foreground tabular-nums">{items.length}</span>
-                </div>
-                {items.map((user) => (
-                  <div
-                    key={user.id}
-                    className="rounded-md border border-border bg-card p-3 shadow-2xs"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p className="text-[13px] font-medium text-foreground">{user.name}</p>
-                        <p className="mt-0.5 text-xs text-muted-foreground">{user.email}</p>
-                      </div>
-                      <span className="font-mono text-[11px] text-muted-foreground">
-                        {getShortCode(user)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            );
-          })}
-        </div>
-      ) : viewMode === "list" ? (
-        <ul className="divide-y divide-border/70 border-t border-border">
-          {rows.map((user) => (
-            <li
-              key={user.id}
-              className="flex items-center justify-between gap-4 px-6 py-2.5 text-[13px] hover:bg-muted/35"
-            >
-              <div className="flex min-w-0 items-center gap-3">
-                <span
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-semibold ${getAvatarTone(user.email)}`}
-                >
-                  {getInitials(user.name)}
-                </span>
-                <div className="min-w-0">
-                  <p className="truncate font-medium text-foreground">{user.name}</p>
-                  <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-                </div>
-              </div>
-              <span className="font-mono text-xs text-muted-foreground">{getShortCode(user)}</span>
-            </li>
-          ))}
-        </ul>
+        </>
       ) : (
-        <ServerDataTable
-          columns={columns}
-          data={rows}
-          meta={meta}
-          sorting={sorting}
-          onSortingChange={(updater) => {
-            setSorting(updater);
-            setPage(1);
-          }}
-          columnVisibility={columnVisibility}
-          onColumnVisibilityChange={setColumnVisibility}
-          onPageChange={setPage}
-          onPageSizeChange={(nextSize) => {
-            setPageSize(nextSize);
-            setPage(1);
-          }}
-          isPending={usersQuery.isPending}
-          isFetching={usersQuery.isFetching}
-          emptyState={
-            <div>
-              <p className="text-sm font-medium text-foreground">No users found</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Try adjusting your search or filter criteria, or add a new user.
-              </p>
+        <>
+          <ConfirmDialog
+            open={deleteRoleTarget !== null}
+            onOpenChange={(open) => {
+              if (!open) {
+                setDeleteRoleTarget(null);
+                setDeleteRoleError(null);
+              }
+            }}
+            title={`Delete role "${deleteRoleTarget?.name ?? ""}"?`}
+            description="This permanently removes the custom role and all of its permission grants."
+            errorMessage={deleteRoleError ?? deleteRoleTarget?.deleteBlockedReason ?? null}
+            isPending={deleteRoleMutation.isPending}
+            onConfirm={() => {
+              if (deleteRoleTarget) {
+                deleteRoleMutation.mutate(deleteRoleTarget.id);
+              }
+            }}
+          />
+
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="relative w-64">
+              <Search
+                className="pointer-events-none absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                ref={searchInputRef}
+                value={rolesSearch}
+                onChange={(e) => {
+                  setRolesSearch(e.target.value);
+                  setRolesPage(1);
+                }}
+                placeholder="Search role name or code..."
+                className="h-8 pl-8 text-xs"
+              />
             </div>
-          }
-        />
+
+            <Popover
+              open={rolesFilterOpen}
+              onOpenChange={setRolesFilterOpen}
+              className="w-72 p-3"
+              trigger={
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="h-8 gap-1.5 text-xs"
+                  onClick={() => setRolesFilterOpen((o) => !o)}
+                >
+                  <Filter className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Filter</span>
+                  {roleFilterCount > 0 ? (
+                    <Badge variant="blue" className="ml-0.5 px-1.5 py-0 text-[10px]">
+                      {roleFilterCount}
+                    </Badge>
+                  ) : null}
+                </Button>
+              }
+            >
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <PopoverLabel className="p-0">Role Filters</PopoverLabel>
+                  {roleFilterCount > 0 ? (
+                    <button
+                      type="button"
+                      className="cursor-pointer text-[11px] font-medium text-primary hover:underline"
+                      onClick={() => {
+                        setRolesCreatedFrom("");
+                        setRolesCreatedTo("");
+                        setRolesPage(1);
+                      }}
+                    >
+                      Clear all
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="role-flt-from"
+                      className="text-[11px] font-medium text-muted-foreground"
+                    >
+                      Created From
+                    </label>
+                    <DatePicker
+                      id="role-flt-from"
+                      className="h-8 text-xs"
+                      placeholder="Start"
+                      value={rolesCreatedFrom}
+                      onChange={(val) => {
+                        setRolesCreatedFrom(val);
+                        setRolesPage(1);
+                      }}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="role-flt-to"
+                      className="text-[11px] font-medium text-muted-foreground"
+                    >
+                      Created To
+                    </label>
+                    <DatePicker
+                      id="role-flt-to"
+                      className="h-8 text-xs"
+                      placeholder="End"
+                      value={rolesCreatedTo}
+                      onChange={(val) => {
+                        setRolesCreatedTo(val);
+                        setRolesPage(1);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Popover>
+
+            <ColumnVisibilityPopover
+              open={rolesColumnsOpen}
+              onOpenChange={setRolesColumnsOpen}
+              options={ROLE_COLUMN_OPTIONS}
+              columnVisibility={rolesVisibility}
+              onToggle={(id) =>
+                setRolesVisibility((prev) => ({ ...prev, [id]: prev[id] === false }))
+              }
+              onReset={() => setRolesVisibility(DEFAULT_ROLE_VISIBILITY)}
+            />
+          </div>
+
+          <ServerDataTable
+            data={rolesRows}
+            columns={roleColumns}
+            meta={rolesMeta}
+            sorting={rolesSorting}
+            onSortingChange={(updater) => {
+              setRolesSorting((prev) => (typeof updater === "function" ? updater(prev) : updater));
+              setRolesPage(1);
+            }}
+            columnVisibility={rolesVisibility}
+            onColumnVisibilityChange={setRolesVisibility}
+            onPageChange={setRolesPage}
+            onPageSizeChange={(next) => {
+              setRolesPageSize(next);
+              setRolesPage(1);
+            }}
+            isPending={rolesQuery.isPending}
+            isFetching={rolesQuery.isFetching}
+            emptyState={
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-foreground">No roles found</p>
+                <p className="text-xs text-muted-foreground">
+                  Create a custom role to configure granular module permissions.
+                </p>
+              </div>
+            }
+          />
+        </>
       )}
 
       <UserCreateDrawer open={createOpen} onOpenChange={setCreateOpen} />
+
+      <RoleDrawer
+        key={`role-${editingRoleId ?? "new"}-${roleDetailQuery.data?.updatedAt ?? "init"}-${roleDrawerOpen ? "open" : "closed"}`}
+        open={roleDrawerOpen}
+        onOpenChange={setRoleDrawerOpen}
+        role={editingRoleId !== null ? (roleDetailQuery.data ?? null) : null}
+        menuGroups={menuCatalogQuery.data ?? []}
+        isLoadingDetail={editingRoleId !== null && roleDetailQuery.isPending}
+        isPending={createRoleMutation.isPending || updateRoleMutation.isPending}
+        serverError={roleDrawerError}
+        onCreate={(payload) => createRoleMutation.mutate(payload)}
+        onUpdate={(id, payload) => updateRoleMutation.mutate({ id, payload })}
+      />
     </div>
   );
 }

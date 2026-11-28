@@ -1,4 +1,5 @@
 import type {
+  AssignUserRoleDto,
   AttendancePolicyOptionsResponse,
   AttendancePolicyRecord,
   BatchAssignScheduleDto,
@@ -6,8 +7,10 @@ import type {
   CreateCutOffDto,
   CreateEmployeeDto,
   CreateReferenceItemDto,
+  CreateRoleDto,
   CreateScheduleDto,
   CreateUserDto,
+  CurrentUserAccessResponse,
   CutOffPresetItem,
   CutOffRecord,
   CutOffScheduleType,
@@ -20,9 +23,11 @@ import type {
   ListEmployeesQuery,
   ListOrgQuery,
   ListReferenceItemsQuery,
+  ListRolesQuery,
   ListSchedulesQuery,
   ListUsersQuery,
   LoginDto,
+  MenuCatalogGroup,
   OrgActiveOptions,
   OrgEntityType,
   OrgHierarchyTree,
@@ -35,12 +40,16 @@ import type {
   ReferenceItemRecord,
   RegisterDto,
   ResolvedScheduleResponse,
+  RoleDetailRecord,
+  RoleOptionItem,
+  RoleRecord,
   ScheduleRecord,
   UpdateAttendancePolicyDto,
   UpdateCutOffDto,
   UpdateEmployeeDto,
   UpdateEmployeeScheduleDto,
   UpdateReferenceItemDto,
+  UpdateRoleDto,
   UpdateScheduleDto,
   User,
 } from "@starter/shared";
@@ -288,5 +297,32 @@ export const api = {
   deleteCutOff: (id: number) =>
     request<void>(`/cut-offs/${id}`, {
       method: "DELETE",
+    }),
+
+  // RBAC: Roles, Menus & User Access
+  getMyAccess: () => request<CurrentUserAccessResponse>("/rbac/me"),
+  getMenuCatalog: () => request<MenuCatalogGroup[]>("/rbac/menus"),
+  listRoles: (query: Partial<ListRolesQuery> = {}) =>
+    request<PaginatedResponse<RoleRecord>>(`/rbac/roles${toQueryString(query)}`),
+  getRoleOptions: () => request<RoleOptionItem[]>("/rbac/roles/options"),
+  getRoleById: (id: number) => request<RoleDetailRecord>(`/rbac/roles/${id}`),
+  createRole: (data: CreateRoleDto) =>
+    request<RoleDetailRecord>("/rbac/roles", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+  updateRole: (id: number, data: UpdateRoleDto) =>
+    request<RoleDetailRecord>(`/rbac/roles/${id}`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    }),
+  deleteRole: (id: number) =>
+    request<void>(`/rbac/roles/${id}`, {
+      method: "DELETE",
+    }),
+  assignUserRole: (userId: string, data: AssignUserRoleDto) =>
+    request<ApiUser>(`/rbac/users/${userId}/role`, {
+      method: "PATCH",
+      body: JSON.stringify(data),
     }),
 };
